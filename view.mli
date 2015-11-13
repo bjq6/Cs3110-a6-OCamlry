@@ -1,3 +1,5 @@
-(* Takes the current map and updated state, returns an updated command
+open Database
+
+(** Takes the current gamestate and outputs to the user the current
  *)
-val update_map : map -> state -> map
+val update_map : gamestate -> ()
