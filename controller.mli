@@ -8,18 +8,36 @@ val begin : unit -> unit
  * sets ups a game *)
 val configure : int -> gamestate
 
-(** Process command will recieve raw [command] from the user, make sense of it
- * and call the proces process function *)
-val process_command : string -> gamestate
+(** Loop/Repl - prompts user, process_command, update gamestate, call main again *)
+val main : gamestate -> unit
 
-val process_attack : unit_type * unit_type -> gamestate
+(** Process command will receive a command from the user module, make sense of it
+ * and call the proper process function below - basically a wrapper for below *)
+val process_command : command -> gamestate
 
-val process_movement : unit_type -> gamestate
+(*---------Commands from process command--------*)
 
-val process_buy : unit_type -> gamestate
+(** Given a unit *)
+val process_movement : loc * loc ->  gamestate
 
-val process_conquer : gamebuilding -> gamestate
+(** Given first a unit and then the unit it is attacking, it returns the
+  gamestate with the proper damage and deaths made*)
+val process_attack : loc * loc -> gamestate
 
-val process_quit : gamestate -> gamestate
+(** Purchases a unit of type unit_type for the current player and places it at
+  loc provided that there is a building there that doesn't already have a unit
+  on it and the current player has the proper resources to purchase the unit*)
+val process_buy : loc * unit_type -> gamestate
 
-val main : gamestate -> gamestate
+(** Ends the turn, reactivates units, updates monies and turns over control*)
+val process_end_turn : unit -> gamestate
+
+(** Ends the game *)
+val process_surrender : unit -> unit
+
+(** Sends the game in a full loop and makes the player try re-entering the
+  * command *)
+val process_invalid : unit -> gamestate
+
+(*---------------------------------------------*)
+
