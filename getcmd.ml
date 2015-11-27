@@ -1,0 +1,77 @@
+open String
+(*The User will be forced into input commands in the way that we want
+ *These are how the commands will be structured
+ *Move (x,y) to (a,b)
+ *Attack (x,y) from (a,b)
+ *Buy unit_x at (a,b)
+ *)
+type unit = int
+type loc = int*int
+type cmd = Move of loc*loc
+    |Attack of loc*loc
+    |Buy of unit*loc
+    |Unknown of bytes
+let rec splitWords str1 =
+      let str = String.trim(str1)^" " in
+      match str with
+      |" "->[]
+      |_->let index = String.index str ' ' in
+          let length = String.length str in
+          let delta = if (length-index-1)<0 then 0 else (length-index-1) in
+          let fst = String.sub str 0 index in
+          let snd = String.sub str (index+1) delta in
+          fst::(splitWords snd)
+let string2pair str =
+  let f = (fun x->if (x = ',') then ' ' else x) in
+  let s = String.map f str in
+  let s1 = if s.[0]='(' then String.sub s 1 ((String.length s)-1) else s in
+  let s2 = if s1.[((String.length s1)-1)]=')'
+      then String.sub s1 0 ((String.length s1)-1) else s1 in
+  let l1 = splitWords s2 in
+  if List.length l1 <> 2 then None else
+  try
+   let l2 = List.map int_of_string l1 in
+   Some(List.hd l2,List.nth l2 1)
+  with Failure "int_of_string"->None
+let string2int str =
+  try  Some(int_of_string str)
+  with Failure "int_of_string"-> None
+let getcmd (player:bytes) =
+  Printf.printf "Player %s's turn to move\n" player;
+
+  let str = read_line () in
+  let words = splitWords(str) in
+  if words = [] then Unknown "No Command" else
+    match String.lowercase(List.hd words) with
+    |"move" ->
+          let snd = List.tl words in
+          if List.length snd = 2
+          then
+          let l1 = List.map string2pair snd in
+          match l1 with
+            |Some x::Some y::[]-> Move (x,y)
+            |_->Unknown "Error Parsing Move Command"
+          else
+          Unknown "Invalid Move Command"
+    |"attack" ->
+          let snd = List.tl words in
+          if List.length snd = 2
+          then
+          let l1 = List.map string2pair snd in
+          match l1 with
+            |Some x::Some y::[]-> Attack (x,y)
+            |_->Unknown "Error Parsing Attack Command"
+          else
+          Unknown "Invalid Attack Command"
+    |"buy" ->
+          let snd = List.tl words in
+          if List.length snd = 2
+          then
+          let one = string2int (List.hd snd) in
+          let two = string2pair (List.nth snd 1) in
+          match (one,two) with
+            |(Some x,Some y)-> Buy (x,y)
+            |_->Unknown "Error Parsing Buy Command"
+          else
+          Unknown "Invalid Buy Command"
+    |_-> Unknown "Unknown Command"
