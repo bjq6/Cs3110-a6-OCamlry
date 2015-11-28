@@ -1,0 +1,6 @@
+Below are assumptions that were used during the development of the view module
+1) Terrain is fixed, ie terrain will never change throughtout the course of 
+the game
+2) Buildings however may change color?  I think it is best to leave building
+as a unit since that will make it easier to draw
+3) 

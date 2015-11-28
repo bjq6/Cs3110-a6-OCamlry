@@ -1,3 +1,26 @@
-(* Takes the current map and updated state, returns an updated command
+open Database
+open Graphics
+
+(*This will have the value of the old gamestate saved on to it 
  *)
-val update_map : map -> state -> map
+val log : gamestate ref
+ (*Function that will observe the gamestate and once it is updated will update
+  * the graphics*)
+val observe_gamestate : gamestate -> unit
+
+type tyle_type = {
+  tyle_color : Graphics.color;
+  position : int*int;
+  height : int;
+  width : int;
+}
+
+val create_map : gamestate -> unit
+
+val populate_map : gamestate -> unit
+(*Upon taking the gamestate, function will depopulate the map*)
+val depopulate_map : gamestate -> unit
+
+(*Updates the status of the bar
+ * TODO may need to create a creator function*)
+val update_status_bar : gamestate -> unit
