@@ -1,4 +1,5 @@
 open String
+
 (*The User will be forced into input commands in the way that we want
  *These are how the commands will be structured
  *Move (x,y) to (a,b)
@@ -6,6 +7,7 @@ open String
  *Buy unit_x at (a,b)
  *)
 (*type unit = int*)
+
 type loc = int*int
 type cmd =
     |Move of loc*loc
@@ -14,6 +16,9 @@ type cmd =
     |Invalid of bytes
     |Surrender
     |EndTurn
+
+
+
 let rec splitWords str1 =
       let str = String.trim(str1)^" " in
       match str with
@@ -24,6 +29,8 @@ let rec splitWords str1 =
           let fst = String.sub str 0 index in
           let snd = String.sub str (index+1) delta in
           fst::(splitWords snd)
+
+
 let string2pair str =
   let f = (fun x->if (x = ',') then ' ' else x) in
   let s = String.map f str in
@@ -36,9 +43,13 @@ let string2pair str =
    let l2 = List.map int_of_string l1 in
    Some(List.hd l2,List.nth l2 1)
   with Failure "int_of_string"->None
+
+
 let string2int str =
   try  Some(int_of_string str)
   with Failure "int_of_string"-> None
+
+
 let getcmd (player:bytes) =
   Printf.printf "Player %s's turn to move\n" player;
   let str = read_line () in
