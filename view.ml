@@ -16,17 +16,21 @@ let update_grapic gamestate = failwith "unimplemented"
 
 
 
-let process_tyles 
+let rec process_tyles map : tyle_type array array = failwith "unimplemented"
+
+let draw_tyle tyle = failwith "unimplemented"
+
 (*Function to create the map, this will
  * 1) Create the nXn grid where that is determined by some other modules
  * 2) Using the gamestate, color the grid based on terrain
  *)
-let create map gamestate = 
+let create_map gamestate = 
   (*Define colors for the water and plain tiles
    *)
   let water_color = Graphics.rgb 0 191 255 in 
   let plain_color = Graphics.rgb 189 183 107 in 
   (*Process tyles*)
+  Array.iter draw_tyle tyles;
 
 
 let populate_map gamestate = failwith "unimplemented"
