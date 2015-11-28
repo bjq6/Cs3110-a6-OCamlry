@@ -5,12 +5,15 @@ open String
  *Attack (x,y) from (a,b)
  *Buy unit_x at (a,b)
  *)
-type unit = int
+(*type unit = int*)
 type loc = int*int
-type cmd = Move of loc*loc
+type cmd =
+    |Move of loc*loc
     |Attack of loc*loc
-    |Buy of unit*loc
-    |Unknown of bytes
+    |Buy of int*loc
+    |Invalid of bytes
+    |Surrender
+    |EndTurn
 let rec splitWords str1 =
       let str = String.trim(str1)^" " in
       match str with
@@ -38,10 +41,9 @@ let string2int str =
   with Failure "int_of_string"-> None
 let getcmd (player:bytes) =
   Printf.printf "Player %s's turn to move\n" player;
-
   let str = read_line () in
   let words = splitWords(str) in
-  if words = [] then Unknown "No Command" else
+  if words = [] then Invalid "No Command" else
     match String.lowercase(List.hd words) with
     |"move" ->
           let snd = List.tl words in
@@ -50,9 +52,9 @@ let getcmd (player:bytes) =
           let l1 = List.map string2pair snd in
           match l1 with
             |Some x::Some y::[]-> Move (x,y)
-            |_->Unknown "Error Parsing Move Command"
+            |_->Invalid "Error Parsing Move Command"
           else
-          Unknown "Invalid Move Command"
+          Invalid "Invalid Move Command"
     |"attack" ->
           let snd = List.tl words in
           if List.length snd = 2
@@ -60,9 +62,9 @@ let getcmd (player:bytes) =
           let l1 = List.map string2pair snd in
           match l1 with
             |Some x::Some y::[]-> Attack (x,y)
-            |_->Unknown "Error Parsing Attack Command"
+            |_->Invalid "Error Parsing Attack Command"
           else
-          Unknown "Invalid Attack Command"
+          Invalid "Invalid Attack Command"
     |"buy" ->
           let snd = List.tl words in
           if List.length snd = 2
@@ -71,7 +73,10 @@ let getcmd (player:bytes) =
           let two = string2pair (List.nth snd 1) in
           match (one,two) with
             |(Some x,Some y)-> Buy (x,y)
-            |_->Unknown "Error Parsing Buy Command"
+            |_->Invalid "Error Parsing Buy Command"
           else
-          Unknown "Invalid Buy Command"
-    |_-> Unknown "Unknown Command"
+          Invalid "Invalid Buy Command"
+    |"surrender"->Surrender
+    |"quit"->Surrender
+    |"end" ->EndTurn
+    |_-> Invalid "Unknown Command"
