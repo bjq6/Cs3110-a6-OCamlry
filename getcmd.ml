@@ -7,11 +7,11 @@ open String
  *Buy unit_x at (a,b)
  *)
 
-type unit = int
+type unit_x = int
 type loc = int*int
 type cmd = Move of loc*loc
     |Attack of loc*loc
-    |Buy of unit*loc
+    |Buy of unit_x*loc
     |Unknown of bytes
 
 
