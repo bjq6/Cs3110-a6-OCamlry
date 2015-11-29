@@ -9,10 +9,11 @@ val log : gamestate ref
 val observe_gamestate : gamestate -> unit
 
 type tyle_type = {
-  tyle_color : Graphics.color;
-  position : int*int;
+  x : int;
+  y : int;
   height : int;
   width : int;
+  tyle_color : Graphics.color
 }
 
 val create_map : gamestate -> unit
