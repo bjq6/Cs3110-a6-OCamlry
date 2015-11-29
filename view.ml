@@ -69,9 +69,18 @@ let create_map gamestate =
   (*At this point, we should now have a map that is processed and ready to get
    * filed*)
 (*Helper functions to use when drawing units in the map *)
-
+(*Buildings will be represented as triangles*)
+let draw_building (x,y) delta_x delta_y = 
+  let height = delta_y*8/10 in 
+  let width = delta_x*2/10 in
+  Graphics.fill_rect (delta_x*x + delta_x*4/10) (delta_y*y + delta_y/10) 
+                      width height 
+                      
 (*infantry is represented by triangle*)
-let draw_infantry position delta_x delta_y  = failwith "unimplemented"
+let draw_infantry (x,y) delta_x delta_y = 
+  Graphics.fill_poly [|(x*delta_x + delta_x/10, y*delta_y + delta_y/10);
+                       ((x+1)*delta_x - delta_x/10, y*delta_y + delta_y/10);
+                       (x*delta_x + delta_x/2, (y+1)*delta_y - delta_y/10) |]
 
 (*tank is represented by a circle*)
 let draw_tank (x,y) delta_x delta_y = 
@@ -96,7 +105,7 @@ let populate_map gamestate =
   let delta_y = 600/(Array.length gamestate.map.(0)) in
   List.iter (fun elt -> draw_unit elt delta_x delta_y) gamestate.units 
 
-let depopulate_map gamestate = failwith "unimplemented"
+let depopulate_map gamestate = create_map gamestate
 
 let update_status_bar gamestate = failwith "unimplemented"
 
