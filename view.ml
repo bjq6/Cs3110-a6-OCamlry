@@ -44,7 +44,7 @@ let create_map gamestate =
   let num_hor_tiles = Array.length gamestate.map.(0) in
   let delta_x = 600/num_hor_tiles in 
   let delta_y = 600/num_vert_tiles in
-
+  curr_y := -delta_y;
   draw_map gamestate.map delta_x delta_y
   (*At this point, we should now have a map that is processed and ready to get
    * filed*)
