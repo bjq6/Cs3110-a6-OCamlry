@@ -1,8 +1,10 @@
 type tile = Plain | Water 
 type unit_type = Infantry | Ocamlry | Tank
+type player = Player1 | Player2
 
 type unit_parameters = {
   typ : unit_type;
+  owner : player;
   mutable position : int*int
 }
 
@@ -40,6 +42,10 @@ let test_init_state3 = {
           [|Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain|];
           [|Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain|]
   |];
-  units = [];
+  units = [{typ = Tank; owner = Player1; position = (0,0)}; 
+          {typ = Ocamlry; owner = Player1; position = (1,0)};
+          {typ = Tank; owner = Player2; position =  (9,9)}; 
+          {typ = Ocamlry; owner = Player2; position = (9,8)}
+  ];
   update = Ivar.create ()
 }

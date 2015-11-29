@@ -7,6 +7,8 @@ let curr_x = ref 0
 let curr_y = ref 0 
 let water_color = Graphics.rgb 0 191 255 
 let plain_color = Graphics.rgb 189 183 107 
+let player1_color = Graphics.red
+let player2_color = Graphics.blue
 
 (*The followind two functions below should take in the raw game map 
  * (which at this point is an array of array and then return a new 
@@ -67,18 +69,32 @@ let create_map gamestate =
   (*At this point, we should now have a map that is processed and ready to get
    * filed*)
 (*Helper functions to use when drawing units in the map *)
-let draw_infantry loc = failwith "unimplemented"
 
-let draw_tank loc = failwith "unimplemented"
+(*infantry is represented by triangle*)
+let draw_infantry position delta_x delta_y  = failwith "unimplemented"
 
-let draw_ocamlry loc = failwith "unimplemented" 
+(*tank is represented by a circle*)
+let draw_tank (x,y) delta_x delta_y = 
+  Graphics.fill_circle (delta_x*x + delta_x/2) 
+                        (delta_y*y + delta_y/2) (delta_x/2)
 
-let draw_unit unit_to_draw = match unit_to_draw.typ with
-  |Infantry -> draw_infantry unit_to_draw.position
-  |Ocamlry  -> draw_ocamlry unit_to_draw.position
-  |Tank     -> draw_tank unit_to_draw.position
+(*ocamlry is represetned by square*)
+let draw_ocamlry (x,y) delta_x delta_y = 
+  Graphics.fill_rect (delta_x*x + 6) (delta_y*y + 6) 
+                      (delta_x*8/10) (delta_y*8/10)
 
-let populate_map gamestate = List.iter (fun elt -> draw_unit e) gamestate.units 
+let draw_unit unit_to_draw delta_x delta_y = 
+  Graphics.set_color (match unit_to_draw.owner with Player1 -> player1_color
+                                                   |Player2 -> player2_color);
+  match unit_to_draw.typ with
+  |Infantry -> draw_infantry unit_to_draw.position delta_x delta_y
+  |Ocamlry  -> draw_ocamlry unit_to_draw.position delta_x delta_y
+  |Tank     -> draw_tank unit_to_draw.position delta_x delta_y 
+
+let populate_map gamestate = 
+  let delta_x = 600/(Array.length gamestate.map) in 
+  let delta_y = 600/(Array.length gamestate.map.(0)) in
+  List.iter (fun elt -> draw_unit elt delta_x delta_y) gamestate.units 
 
 let depopulate_map gamestate = failwith "unimplemented"
 
