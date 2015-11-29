@@ -1,14 +1,12 @@
 open Graphics
 open Async
 
-let previous_state = ref {map = [|[|Plain |]|]; update = Ivar.create ()}
+let previous_state = ref {map = [|[|Plain |]|]; units = [];
+ update = Ivar.create ()}
 let curr_x = ref 0 
 let curr_y = ref 0 
 let water_color = Graphics.rgb 0 191 255 
 let plain_color = Graphics.rgb 189 183 107 
-
-
-let rec process_tyles map = failwith "unimplemented"
 
 (*The followind two functions below should take in the raw game map 
  * (which at this point is an array of array and then return a new 
@@ -29,13 +27,32 @@ let draw_map tyle_matrix delta_x delta_y  =
     curr_y := !curr_y + delta_y;
     draw_array arr_lst delta_x delta_y delta_x) tyle_matrix
 
+let draw_hort_lines delta_x delta_y = 
+  Graphics.set_color Graphics.black;
+  Graphics.moveto 0 0;
+  for i = 0 to 600/delta_x do 
+    Graphics.moveto 0 (Graphics.current_y () + delta_y);
+    Graphics.lineto 600 (Graphics.current_y ());
+  done
+
+let draw_vert_lines delta_x delta_y = 
+  Graphics.set_color Graphics.black;
+  Graphics.moveto 0 0;
+  for i = 0 to 600/delta_y do
+    Graphics.moveto (Graphics.current_x () + delta_x) 0;
+    Graphics.lineto (Graphics.current_x ()) 600;
+  done
+
+let draw_grid delta_x delta_y = 
+  draw_vert_lines delta_x delta_y;
+  draw_hort_lines delta_x delta_y
 
 (*Function to create the map, this will
  * 1) Create the nXn grid where that is determined by some other modules
  * 2) Using the gamestate, color the grid based on terrain
  *)
 let create_map gamestate = 
-  Graphics.open_graph " 600x600";
+  Graphics.open_graph " 600x650";
   
   (*Define colors for the water and plain tiles
    *)
@@ -45,11 +62,23 @@ let create_map gamestate =
   let delta_x = 600/num_hor_tiles in 
   let delta_y = 600/num_vert_tiles in
   curr_y := -delta_y;
-  draw_map gamestate.map delta_x delta_y
+  draw_map gamestate.map delta_x delta_y;
+  draw_grid delta_x delta_y
   (*At this point, we should now have a map that is processed and ready to get
    * filed*)
+(*Helper functions to use when drawing units in the map *)
+let draw_infantry loc = failwith "unimplemented"
 
-let populate_map gamestate = failwith "unimplemented"
+let draw_tank loc = failwith "unimplemented"
+
+let draw_ocamlry loc = failwith "unimplemented" 
+
+let draw_unit unit_to_draw = match unit_to_draw.typ with
+  |Infantry -> draw_infantry unit_to_draw.position
+  |Ocamlry  -> draw_ocamlry unit_to_draw.position
+  |Tank     -> draw_tank unit_to_draw.position
+
+let populate_map gamestate = List.iter (fun elt -> draw_unit e) gamestate.units 
 
 let depopulate_map gamestate = failwith "unimplemented"
 
