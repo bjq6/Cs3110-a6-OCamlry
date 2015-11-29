@@ -1,1 +1,8 @@
-#require "graphics"
+#require "graphics";;
+
+#require "async";;
+#directory "_build";;
+#directory ".";;
+
+open Async.Std;;
+#use "test_stuff.ml";;
