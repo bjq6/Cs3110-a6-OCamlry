@@ -5,8 +5,8 @@ let create_dummy_unit owner x y typ =
   curr_mvt = 0; position = (x,y);}
 
 let test_init_state3 = {
-  map = [|[|Plain; Plain; Plain; Water; Plain; Plain; Plain; Plain; Plain; Plain|];
-          [|Plain; Plain; Plain; Water; Plain; Plain; Plain; Plain; Plain; Plain|];
+  map = [|[|Building (Some (Player2 "")); Plain; Plain; Water; Plain; Plain; Plain; Plain; Plain; Plain|];
+          [|Plain; Plain; Plain; Building (Some (Player1 "")); Plain; Plain; Plain; Plain; Plain; Plain|];
           [|Plain; Plain; Plain; Water; Plain; Plain; Plain; Plain; Plain; Plain|];
           [|Plain; Plain; Plain; Water; Plain; Plain; Plain; Plain; Plain; Plain|];
           [|Plain; Plain; Plain; Plain; Plain; Water; Water; Plain; Plain; Plain|];
@@ -14,7 +14,7 @@ let test_init_state3 = {
           [|Plain; Plain; Plain; Plain; Plain; Water; Water; Plain; Plain; Plain|];
           [|Plain; Plain; Plain; Plain; Plain; Water; Water; Plain; Plain; Plain|];
           [|Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain|];
-          [|Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain|]
+          [|Plain; Plain; Plain; Plain; Plain; Plain; Plain; Building (Some (Player2 "")); Plain; Plain|]
           |];
   curr_player = {player_name = Player1 ""; money= 0; building_ids=[]; unit_ids = []};
   player_state = [];
