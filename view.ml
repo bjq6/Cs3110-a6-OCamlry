@@ -1,14 +1,16 @@
-open Types
 open Graphics
-
-(*let previous_state = ref {map = [|[|Plain |]|]; units = [];
- update = Ivar.create ()}*)
+open Types
+(*Define the colors and variables that will be used in the game.  These 
+ * include tyle colors, active/inactive unit colors, and neutral colors
+ *)
 let curr_x = ref 0 
 let curr_y = ref 0 
 let water_color = Graphics.rgb 0 191 255 
-let plain_color = Graphics.rgb 189 183 107 
+let plain_color = Graphics.rgb 153 255 153 
 let player1_color = Graphics.red
+let player1_inactive_color = Graphics.rgb 201 136 136 
 let player2_color = Graphics.blue
+let player2_inactive_color = Graphics.rgb 140 140 212
 let neutral_color = Graphics.white
 (*The followind two functions below should take in the raw game map 
  * (which at this point is an array of array and then return a new 
@@ -89,7 +91,7 @@ let draw_infantry (x,y) delta_x delta_y =
 (*tank is represented by a circle*)
 let draw_tank (x,y) delta_x delta_y = 
   Graphics.fill_circle (delta_x*x + delta_x/2) 
-                        (delta_y*y + delta_y/2) (delta_x/2)
+                        (delta_y*y + delta_y/2) (delta_x*4/10)
 
 (*ocamlry is represetned by square*)
 let draw_ocamlry (x,y) delta_x delta_y =
@@ -105,16 +107,24 @@ let draw_infantry_outline (x,y) delta_x delta_y =
 (*tank is represented by a circle*)
 let draw_tank_outline (x,y) delta_x delta_y = 
   Graphics.draw_circle (delta_x*x + delta_x/2) 
-                        (delta_y*y + delta_y/2) (delta_x/2)
+                        (delta_y*y + delta_y/2) (delta_x*4/10)
 
 (*ocamlry is represetned by square*)
 let draw_ocamlry_outline (x,y) delta_x delta_y =
   Graphics.draw_rect (delta_x*x + 6) (delta_y*y + 6) 
                       (delta_x*8/10) (delta_y*8/10)
+(*Function that will return a color based on (1) the player who owns
+ * the color and (2) whether the unit is active or not
+ *)
+let get_color unit_to_draw = 
+  match (unit_to_draw.plyr, unit_to_draw.active) with 
+  |(Player1 _, true) -> player1_color
+  |(Player1 _, false) -> player1_inactive_color 
+  |(Player2 _, true) -> player2_color
+  |(Player2 _, false) -> player2_inactive_color
 
 let draw_unit unit_to_draw delta_x delta_y = 
-  Graphics.set_color (match unit_to_draw.plyr with Player1 _ -> player1_color
-                                                   |Player2 _ -> player2_color);
+  Graphics.set_color (get_color unit_to_draw);
   (match unit_to_draw.typ with
   |Infantry -> draw_infantry unit_to_draw.position delta_x delta_y
   |Ocamlry  -> draw_ocamlry unit_to_draw.position delta_x delta_y
