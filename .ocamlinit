@@ -9,4 +9,5 @@
 open Async.Std;;
 
 let sec = Core.Std.sec;;
+#use "types.ml";;
 #use "test_stuff.ml";;

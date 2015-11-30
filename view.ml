@@ -1,5 +1,3 @@
-open Graphics
-open Types 
 
 (*let previous_state = ref {map = [|[|Plain |]|]; units = [];
  update = Ivar.create ()}*)
@@ -119,7 +117,11 @@ let update_status_bar gamestate = failwith "unimplemented"
     populate_map updated_state;
     update_status_bar;
     previous_state := update_state)
-*) 
+*)
+let update_state new_gamestate = 
+  depopulate_map new_gamestate;
+  populate_map new_gamestate
+
 let init gamestate =  
   create_map gamestate; 
   populate_map gamestate

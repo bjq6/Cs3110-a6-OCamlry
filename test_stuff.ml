@@ -1,51 +1,29 @@
-type tile = Plain | Water 
-type unit_type = Infantry | Ocamlry | Tank
-type player = Player1 of string | Player2 of string
-
-type unit_parameters = {
-  typ : unit_type;
-  owner : player;
-  mutable position : int*int
-}
-
-type gamestate = {
-  map : tile array array;
-  units : unit_parameters list;
-  update : gamestate Ivar.t 
-}
-
-(*
-let test_init_state1 = {
-  map = [| [|Plain; Plain; Plain; Water|] ; [| Plain; Plain; Plain; Plain|] ;
-            [| Plain; Plain; Plain; Plain |]; [|Plain; Water; Water; Water|] |];
-  update = Ivar.create ()
-}
-
-let test_init_state2 = {
-  map = [|  [| Plain; Plain; Plain: Water |] ; 
-            [| Plain; Water; Plain; Plain |] ;
-            [| Plain; Water; Plain; Plain |] ;
-            [| Plain; Water; Water: Plain |] |];
-  update = Ivar.create ()
-}
-*)
+(*Define states to test the view module*)
+let create_dummy_unit owner x y typ = 
+  {typ = typ; plyr = owner; unit_id= 0; active = false; curr_hp = 0;
+  curr_mvt = 0; position = (x,y)}
 
 let test_init_state3 = {
-  map = [|[|Plain; Plain; Plain; Water; Plain; Plain; Plain; Plain; Plain; Plain|]; 
+  map = [|[|Plain; Plain; Plain; Water; Plain; Plain; Plain; Building (Some (Player2 "")); Plain; Plain|]; 
           [|Plain; Plain; Plain; Water; Plain; Plain; Plain; Plain; Plain; Plain|]; 
           [|Plain; Plain; Plain; Water; Plain; Plain; Plain; Plain; Plain; Plain|]; 
-          [|Plain; Plain; Plain; Water; Plain; Plain; Plain; Plain; Plain; Plain|]; 
+          [|Plain; Plain; Plain; Water; Plain; Building None; Plain; Plain; Plain; Plain|]; 
           [|Plain; Plain; Plain; Plain; Plain; Water; Water; Plain; Plain; Plain|];
           [|Plain; Plain; Plain; Plain; Plain; Water; Water; Plain; Plain; Plain|]; 
           [|Plain; Plain; Plain; Plain; Plain; Water; Water; Plain; Plain; Plain|]; 
-          [|Plain; Plain; Plain; Plain; Plain; Water; Water; Plain; Plain; Plain|]; 
+          [|Building (Some Player1 ""); Plain; Plain; Plain; Plain; Water; Water; Plain; Plain; Plain|]; 
           [|Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain|];
           [|Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain|]
   |];
-  units = [{typ = Infantry; owner = Player1 ""; position = (0,0)}; 
-          {typ = Ocamlry; owner = Player1 ""; position = (1,0)};
-          {typ = Tank; owner = Player2 ""; position =  (9,9)}; 
-          {typ = Ocamlry; owner = Player2 ""; position = (9,8)}
-  ];
-  update = Ivar.create ()
+  curr_player = {player_name = Player1 ""; money= 0; building_ids=[]; unit_ids = []};
+  player_state = [];
+  unit_list = 
+    [create_dummy_unit (Player1 "") 0 0 (Infantry);
+     create_dummy_unit (Player1 "") 1 0 (Tank);
+     create_dummy_unit (Player1 "") 1 1 (Ocamlry);
+     create_dummy_unit (Player2 "") 9 9 (Infantry);
+     create_dummy_unit (Player2 "") 9 8 (Tank);
+     create_dummy_unit (Player2 "") 9 7 (Ocamlry)];
+  building_list = []
 }
+
