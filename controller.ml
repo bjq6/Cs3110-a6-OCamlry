@@ -25,8 +25,11 @@ let process_command (c:cmd) (g:gamestate) : gamestate = failwith "unimplemented"
 
   match c with
   | Invalid s -> printf "%s\n" s; g
-  | Surrender -> (*surrender protocol*)
-  | EndTurn -> (*modify gamestate to change player, return new gamestate*)
+  | Surrender -> (*surrender protocol:Clarkson Wins Exit 0*)
+  | EndTurn ->
+    (*modify gamestate to change player, return new gamestate*)
+    (*add money to new players bank(100 per building owned)*)
+    (*refresh all unit(have refresh func in util)*)
   | Move (x,y) ->
     (*check x to see if unit present belonging to current player*)
     (*check y to see if space available and is plain or building*)
@@ -44,5 +47,11 @@ let process_command (c:cmd) (g:gamestate) : gamestate = failwith "unimplemented"
     (*return new gamestate*)
   | Capture x -> (*same as attack but with unit, building on same space*)
   | Buy (u,x) ->
+    (*check to make sure there is a building at x that is owned by the player*)
+    (*check to make sure there is no a unit at x*)
+    (*check to make sure the player has enough money to buy the unit*)
+    (*subtract the money from the player*)
+    (*add a unit to the unit list at x that is inactive(cannot move or attack)*)
+    (*update the gamestate*)
 
 
