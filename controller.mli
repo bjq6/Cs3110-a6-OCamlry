@@ -13,4 +13,4 @@ val main : gamestate -> unit
 
 (** Process command will receive a command from the user module, make sense of it
  * and call the proper process function below - basically a wrapper for below *)
-val process_command : cmd -> gamestate
+val process_command : cmd->gamestate-> gamestate
