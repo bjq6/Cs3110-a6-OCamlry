@@ -1,4 +1,5 @@
 open String
+open Types
 
 (*The User will be forced into input commands in the way that we want
  *These are how the commands will be structured
@@ -8,14 +9,7 @@ open String
  *)
 (*type unit = int*)
 
-type loc = int*int
-type cmd =
-    |Move of loc*loc
-    |Attack of loc*loc
-    |Buy of int*loc
-    |Invalid of bytes
-    |Surrender
-    |EndTurn
+
 
 
 

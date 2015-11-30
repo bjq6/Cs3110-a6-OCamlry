@@ -48,7 +48,7 @@ type building_parameters = {
 
 
 (* What each tile/location on the map can be *)
-type terrain = Plain | Water | Building of player_id option 
+type terrain = Plain | Water | Building of player_id option
 
 
 
@@ -61,3 +61,12 @@ type gamestate = {
   building_list : building_parameters list  (* all the buildings in game *)
 (*  updated : gamestate Deferred.t;  (*updated*)*)
 }
+
+type cmd =
+    |Move of loc*loc
+    |Attack of loc*loc
+    |Capture of loc
+    |Buy of unit_type*loc
+    |Invalid of bytes
+    |Surrender
+    |EndTurn
