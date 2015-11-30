@@ -1,3 +1,5 @@
+open Types
+open Graphics
 
 (*let previous_state = ref {map = [|[|Plain |]|]; units = [];
  update = Ivar.create ()}*)
@@ -90,17 +92,39 @@ let draw_tank (x,y) delta_x delta_y =
                         (delta_y*y + delta_y/2) (delta_x/2)
 
 (*ocamlry is represetned by square*)
-let draw_ocamlry (x,y) delta_x delta_y = 
+let draw_ocamlry (x,y) delta_x delta_y =
   Graphics.fill_rect (delta_x*x + 6) (delta_y*y + 6) 
+                      (delta_x*8/10) (delta_y*8/10)
+
+(*infantry is represented by triangle*)
+let draw_infantry_outline (x,y) delta_x delta_y = 
+  Graphics.draw_poly [|(x*delta_x + delta_x/10, y*delta_y + delta_y/10);
+                       ((x+1)*delta_x - delta_x/10, y*delta_y + delta_y/10);
+                       (x*delta_x + delta_x/2, (y+1)*delta_y - delta_y/10) |]
+
+(*tank is represented by a circle*)
+let draw_tank_outline (x,y) delta_x delta_y = 
+  Graphics.draw_circle (delta_x*x + delta_x/2) 
+                        (delta_y*y + delta_y/2) (delta_x/2)
+
+(*ocamlry is represetned by square*)
+let draw_ocamlry_outline (x,y) delta_x delta_y =
+  Graphics.draw_rect (delta_x*x + 6) (delta_y*y + 6) 
                       (delta_x*8/10) (delta_y*8/10)
 
 let draw_unit unit_to_draw delta_x delta_y = 
   Graphics.set_color (match unit_to_draw.plyr with Player1 _ -> player1_color
                                                    |Player2 _ -> player2_color);
-  match unit_to_draw.typ with
+  (match unit_to_draw.typ with
   |Infantry -> draw_infantry unit_to_draw.position delta_x delta_y
   |Ocamlry  -> draw_ocamlry unit_to_draw.position delta_x delta_y
-  |Tank     -> draw_tank unit_to_draw.position delta_x delta_y 
+  |Tank     -> draw_tank unit_to_draw.position delta_x delta_y );
+  Graphics.set_color (Graphics.black);
+  match unit_to_draw.typ with
+  |Infantry -> draw_infantry_outline unit_to_draw.position delta_x delta_y
+  |Ocamlry  -> draw_ocamlry_outline unit_to_draw.position delta_x delta_y
+  |Tank     -> draw_tank_outline unit_to_draw.position delta_x delta_y 
+   
 
 let populate_map gamestate = 
   let delta_x = 600/(Array.length gamestate.map) in 
