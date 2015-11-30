@@ -2,7 +2,18 @@ open Types
 
 let print_map (g:gamestate) = failwith "unimplemented"
 
-(*---------Commands from process command--------*)
+(*given location, returns unit option. used in controller*)
+let rec unit_at_loc (lst : unit_parameters list) (x : loc) =
+  match lst with
+  | [] -> None
+  | h::t -> if h.position = x then Some h else unit_at_loc t x
+
+(*next player given two players defined
+let next_player (g: gamestate) =
+if g.curr_player = Player1
+then g.curr_player := Player2 else g.curr_player := Player1*)
+
+(*---------Commands from process command--------
 
 (** Given a unit *)
 let process_movement ((x1,y1),(x2,y2)) = failwith "unimplemented"
@@ -26,4 +37,4 @@ let process_surrender () = failwith "unimplemented"
   * command *)
 let process_invalid () = failwith "unimplemented"
 
-(*---------------------------------------------*)
+---------------------------------------------*)

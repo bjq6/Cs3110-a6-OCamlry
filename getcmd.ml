@@ -88,7 +88,7 @@ let getcmd (player:bytes) =
           let one = string2unit (List.hd snd) in
           let two = string2pair (List.nth snd 1) in
           match (one,two) with
-            |(Some x,Some y)-> Buy (x,y)
+            |(Some x,Some y)-> Buy (Infantry,y)
             |_->Invalid "Error Parsing Buy Command"
           else
           Invalid "Invalid Buy Command"
