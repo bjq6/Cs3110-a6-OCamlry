@@ -59,5 +59,5 @@ type gamestate = {
   player_state : player list;  (* all the players in the game *)
   unit_list : unit_parameters list;  (* all the units in the game *)
   building_list : building_parameters list;  (* all the buildings in game *)
-  updated : gamestate Deferred.t;  (*updated*)
+  (*updated : gamestate Deferred.t;  (*updated*)*)
 }
