@@ -8,6 +8,8 @@ val b_at_loc : building_parameters list -> loc -> building_parameters option
 
 val base_access : unit_parameters -> base_unit
 
+val base_access_unit_type : unit_type -> base_unit
+
 (*---------Commands from process command--------
 
 (** Given a unit *)

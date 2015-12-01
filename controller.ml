@@ -137,12 +137,34 @@ let process_command (c:cmd) (g:gamestate) : gamestate =
 
   end
 
-  | Buy (u,x) -> failwith "unimplemented"
+  | Buy (u,x) ->
+    (*u is base unit, x is loc of building*)
     (*check to make sure there is a building at x that is owned by the player*)
-    (*check to make sure there is no a unit at x*)
-    (*check to make sure the player has enough money to buy the unit*)
-    (*subtract the money from the player*)
-    (*add a unit to the unit list at x that is inactive(cannot move or attack)*)
-    (*update the gamestate*)
+    let target = (b_at_loc g.building_list x) in
 
+    match target with
+    | None -> print_endline "No building at purchase location"; g
+    | Some b -> if (g.curr_player.player_name <> b.owner)
+      then (print_endline "You don't own this building :/"; g)
+      else
+    (*check to make sure there is not a unit at x*)
+      match (unit_at_loc g.unit_list x) with
+      | Some u -> print_endline "There's a unit already here!"; g
+      | None ->
+    (*check to make sure the player has enough money to buy the unit*)
+        let product = base_access_unit_type u in
+        if (g.curr_player.money < product.unit_cost)
+          then (print_endline "You too broke to buy this"; g)
+          else
+    (*subtract the money from the player*)
+            (g.curr_player.money <- g.curr_player.money - product.unit_cost;
+    (*add a unit to the unit list at x that is inactive(cannot move or attack)*)
+            let new_u = {typ = u; plyr = g.curr_player.player_name;
+            unit_id = 3110; active = false; curr_hp = product.max_hp;
+            curr_mvt = product.max_mvt; position = x} in
+            g.unit_list <- (new_u :: g.unit_list);
+            g.curr_player.unit_ids <- (new_u.unit_id :: g.curr_player.unit_ids);
+
+    (*update the gamestate*)
+    g)
 
