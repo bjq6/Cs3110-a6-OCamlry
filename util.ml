@@ -13,6 +13,22 @@ let next_player (g: gamestate) =
 if g.curr_player = Player1
 then g.curr_player := Player2 else g.curr_player := Player1*)
 
+let infantry_base = {unit_typ = Infantry; max_hp = 100; max_mvt = 3;
+  unit_cost = 200; attack_range = 1}
+
+let ocamlry_base = {unit_typ = Ocamlry; max_hp = 150; max_mvt = 5;
+  unit_cost = 500; attack_range = 2}
+
+let tank_base = {unit_typ = Tank; max_hp = 250; max_mvt = 4;
+  unit_cost = 1000; attack_range = 1}
+
+(*let base_unit_list = [infantry_base; ocamlry_base; tank_base] *)
+
+let base_access (x : unit_parameters) =
+  match x.typ with
+  | Infantry -> infantry_base
+  | Ocamlry -> ocamlry_base
+  | Tank -> tank_base
 
 
 (*---------Commands from process command--------

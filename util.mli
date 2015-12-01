@@ -4,6 +4,8 @@ val print_map : gamestate -> unit
 
 val unit_at_loc : unit_parameters list -> loc -> unit_parameters option
 
+val base_access : unit_parameters -> base_unit
+
 (*---------Commands from process command--------
 
 (** Given a unit *)
