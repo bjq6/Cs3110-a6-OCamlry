@@ -1,6 +1,7 @@
 open Types
 open Util
 open Getcmd
+open Battle
 
 (** Starts the REPL *)
 let begin_game () = ()
@@ -35,7 +36,7 @@ let process_command (c:cmd) (g:gamestate) : gamestate =
 
     (*refresh all unit(have refresh func in util)*)
   | Move ((x1,y1),(x2,y2)) ->
-    (*check x to see if unit present belonging to current player*)
+    (*check to see if unit present belonging to current player*)
     begin
     match (unit_at_loc g.unit_list (x1,y1)) with
     | None -> print_endline "No unit at this location"; g
@@ -55,7 +56,7 @@ let process_command (c:cmd) (g:gamestate) : gamestate =
         then (print_endline "Can't move to water"; g)
         else
     (*check if unit can move that many spaces. use abs delta x + delta y*)
-        let move_amt = abs ((x1-x2)+(y1-y2)) in
+        let move_amt = abs (x1-x2)+ abs (y1-y2) in
         if (move_amt > u.curr_mvt)
           then (print_endline "Movement is too far"; g)
           else
@@ -85,21 +86,57 @@ let process_command (c:cmd) (g:gamestate) : gamestate =
         then (print_endline "You can't attack yourself :/"; g)
         else
     (*check to make sure distance is in attack range*)
-        let range = abs ((x1-x2)+(y1-y2)) in
+        let range = abs (x1-x2) + abs (y1-y2) in
         let base = base_access u in
         if (range > base.attack_range)
           then (print_endline "Movement is too far"; g)
           else
-    (*call battle function in util with two units. returns two units*)
-           (* (let new_unit_list = battle u target g.unit_list in*)
+    (*call battle function in util with two units. returns unit list*)
+           let new_unit_list = battle u target g.unit_list in
     (*update gamestate with updated units*)
-           (*g.unit_list := new_unit_list) *)
+           g.unit_list <- new_unit_list;
     (*return new gamestate*)
     g
     end
-  | Capture x -> (*same as attack but with unit, building on same space*)
+  | Capture (x,y) ->
+  (*same as attack but with unit, building on same space*)
   (*only infantry can capture*)
-  failwith "unimplemented"
+
+  (*check to see if unit present belonging to current player*)
+    begin
+    match (unit_at_loc g.unit_list (x,y)) with
+    | None -> print_endline "No unit at attack location"; g
+    | Some u -> if (g.curr_player.player_name <> u.plyr)
+      then (print_endline "This is not your unit"; g)
+      else
+
+    (*check to see if unit is active*)
+      if (not u.active) then (print_endline "Unit not active"; g)
+      else
+
+      (*check if infantry*)
+      if (u.typ <> Infantry) then (print_endline "Only Infantry can capture"; g)
+      else
+
+    (*check y to see if building present belonging to enemy*)
+      let target = (b_at_loc g.building_list (x,y)) in
+
+      match target with
+      | None -> print_endline "No building at target location"; g
+      | Some b -> if (g.curr_player.player_name = b.owner)
+        then (print_endline "You already own this building :/"; g)
+        else
+
+    (*call capture function in util. returns building list*)
+
+        let new_building_list = capture u.plyr b g.building_list in
+    (*update gamestate with updated building list*)
+          g.building_list <- new_building_list;
+    (*return new gamestate*)
+    g
+
+  end
+
   | Buy (u,x) -> failwith "unimplemented"
     (*check to make sure there is a building at x that is owned by the player*)
     (*check to make sure there is no a unit at x*)

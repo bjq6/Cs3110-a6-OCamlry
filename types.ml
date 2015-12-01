@@ -3,13 +3,14 @@ open Async.Std
 (* A place on the map matrix *)
 type loc = int * int
 type player_id = Player1 of string | Player2 of string
+type specific_unit_id = int
 
 (* A given player *)
 type player = {
-  player_name : player_id;      (* who this player is *)
-  money : int;                  (* How much money this player has*)
-  building_ids : int list;  (* All the buildings owned by this player *)
-  unit_ids : int list;      (* All the units owned by this player*)
+  player_name : player_id;          (* who this player is *)
+  money : int;                      (* How much money this player has*)
+  building_ids : int list;          (* All the buildings owned by this player *)
+  unit_ids : specific_unit_id list; (* All the units owned by this player*)
 }
 
 (* Types of unit - all units start with the same base stats *)
@@ -30,11 +31,11 @@ type base_unit = {
 type unit_parameters = {
   typ : unit_type;        (* Type of unit *)
   plyr : player_id;          (* Player who owns the given unit *)
-  unit_id : int;          (* Unique ID that reperesents this single unit*)
+  unit_id : specific_unit_id;(* Unique ID that reperesents this single unit*)
   mutable active : bool;   (* Reflects whether the unit acted on the given turn *)
   mutable curr_hp : int;  (* Reflects the current health of the unit*)
   mutable curr_mvt : int; (* Reflects how many more moves the unit has this turn*)
-  mutable position : int*int;  (* A location where the unit is now *)
+  mutable position : loc;  (* A location where the unit is now *)
 }
 
 (* Stats of a given building *)
@@ -42,7 +43,7 @@ type building_parameters = {
   max_hp : int;               (* Max health of a building *)
   mutable owner : player_id;  (* Player who owns it *)
   mutable curr_hp : int;      (* Current health of this building *)
-  mutable position : int*int; (* A location where the building is on a map *)
+  mutable position : loc;     (* A location where the building is on a map *)
 }
 
 
