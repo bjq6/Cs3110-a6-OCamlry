@@ -24,8 +24,6 @@ type base_unit = {
   attack_range : int;   (* The max distance the unit can attack from*)
 }
 
-(* List of the above type *)
-let base_unit_list = []
 
 
 (* An individual unit of unit_type with unique unit_id *)

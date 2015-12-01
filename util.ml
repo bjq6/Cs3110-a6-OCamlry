@@ -13,6 +13,8 @@ let next_player (g: gamestate) =
 if g.curr_player = Player1
 then g.curr_player := Player2 else g.curr_player := Player1*)
 
+
+
 (*---------Commands from process command--------
 
 (** Given a unit *)
