@@ -1,10 +1,6 @@
 open Getcmd
 open Types
-let unit2str un =
-  match un with
-  |Infantry -> "Infantry"
-  | Ocamlry -> "Ocamlry"
-  | Tank    -> "Tank"
+
 match getcmd("1") with
 |Invalid s ->Printf.printf "Wrong: %s\n" s
 |Surrender ->Printf.printf "You have Surrendered\n"
