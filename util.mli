@@ -10,6 +10,8 @@ val base_access : unit_parameters -> base_unit
 
 val base_access_unit_type : unit_type -> base_unit
 
+val refresh : unit_parameters list -> unit
+
 (*---------Commands from process command--------
 
 (** Given a unit *)

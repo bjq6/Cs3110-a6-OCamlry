@@ -47,6 +47,17 @@ let base_access_unit_type (x : unit_type) =
   | Tank -> tank_base
 
 
+(*refresh all units at the end of each turn*)
+let rec refresh (lst : unit_parameters list) =
+  match lst with
+  | [] -> ()
+  | h::t ->
+    h.active <- true;
+    let base = base_access h in
+    h.curr_mvt <- base.max_mvt;
+    refresh t
+
+
 
 
 (*---------Commands from process command--------

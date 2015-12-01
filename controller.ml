@@ -22,19 +22,22 @@ let rec main (s:gamestate) = failwith "unimplemented"
 
 (** Process command will receive a command from the user module, make sense of it
  * and call the proper process function below - basically a wrapper for below *)
-(*you are welcome to clean this up, just trying to get something to work right now*)
+(*you are welcome to clean this up, just trying to get something to work now*)
+(*distances between units measured as manhattan distance not euclidean*)
 let process_command (c:cmd) (g:gamestate) : gamestate =
   match c with
   | Invalid s -> Printf.printf "Invalid command %s\n" s; g
   | Surrender ->
-    (*surrender protocol:Clarkson Wins Exit 0
-    print_endline "Clarkson wins"; Exit 0*) failwith "unimplemented"
-  | EndTurn -> failwith "unimplemented"
-    (*modify gamestate to change player, return new gamestate*)
+    (*surrender protocol:Clarkson Wins Exit 0 *)
+    print_endline "Clarkson wins"; exit 0
+  | EndTurn ->
+    (*modify gamestate to change player*)
 
     (*add money to new players bank(100 per building owned)*)
+      g.curr_player.money <- g.curr_player.money + 100;
+    (*refresh all unit(have refresh func in util); return g*)
+      refresh g.unit_list; g
 
-    (*refresh all unit(have refresh func in util)*)
   | Move ((x1,y1),(x2,y2)) ->
     (*check to see if unit present belonging to current player*)
     begin
