@@ -17,7 +17,7 @@ let infantry_base = {unit_typ = Infantry; max_hp = 100; max_mvt = 3;
   unit_cost = 200; attack_range = 1}
 
 let ocamlry_base = {unit_typ = Ocamlry; max_hp = 150; max_mvt = 5;
-  unit_cost = 500; attack_range = 2}
+  unit_cost = 500; attack_range = 1}
 
 let tank_base = {unit_typ = Tank; max_hp = 250; max_mvt = 4;
   unit_cost = 1000; attack_range = 1}

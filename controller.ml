@@ -24,7 +24,7 @@ let rec main (s:gamestate) = failwith "unimplemented"
 (*you are welcome to clean this up, just trying to get something to work right now*)
 let process_command (c:cmd) (g:gamestate) : gamestate =
   match c with
-  | Invalid s -> Printf.printf "%s\n" s; g
+  | Invalid s -> Printf.printf "Invalid command %s\n" s; g
   | Surrender ->
     (*surrender protocol:Clarkson Wins Exit 0
     print_endline "Clarkson wins"; Exit 0*) failwith "unimplemented"
@@ -43,6 +43,10 @@ let process_command (c:cmd) (g:gamestate) : gamestate =
       then (print_endline "This is not your unit"; g)
       else
 
+    (*check to see if unit is active*)
+      if (not u.active) then (print_endline "Unit not active"; g)
+      else
+
     (*check y to see if space available and is plain or building*)
 
       match (unit_at_loc g.unit_list (x2,y2)) with
@@ -56,9 +60,8 @@ let process_command (c:cmd) (g:gamestate) : gamestate =
           then (print_endline "Movement is too far"; g)
           else
     (*update x, y, unit position, unit state to reflect # of spaces moved*)
-    (*active?
-            (u.position := (x2,y2);
-            u.curr_mvt := u.curr_mvt - move_amt; g) *) g
+            (u.position <- (x2,y2);
+            u.curr_mvt <- u.curr_mvt - move_amt; g)
     end
     (*if any conditions fail: print error message, return original state*)
     (*return new gamestate*)
@@ -70,6 +73,11 @@ let process_command (c:cmd) (g:gamestate) : gamestate =
     | Some u -> if (g.curr_player.player_name <> u.plyr)
       then (print_endline "This is not your unit"; g)
       else
+
+    (*check to see if unit is active*)
+      if (not u.active) then (print_endline "Unit not active"; g)
+      else
+
     (*check y to see if unit present belonging to enemy*)
       match (unit_at_loc g.unit_list (x2,y2)) with
       | None -> print_endline "No unit at target location"; g
@@ -83,8 +91,9 @@ let process_command (c:cmd) (g:gamestate) : gamestate =
           then (print_endline "Movement is too far"; g)
           else
     (*call battle function in util with two units. returns two units*)
-           (*let (u',target') = battle_module u target in*)
+           (* (let new_unit_list = battle u target g.unit_list in*)
     (*update gamestate with updated units*)
+           (*g.unit_list := new_unit_list) *)
     (*return new gamestate*)
     g
     end
