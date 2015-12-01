@@ -77,8 +77,9 @@ let process_command (c:cmd) (g:gamestate) : gamestate =
         then (print_endline "You can't attack yourself :/"; g)
         else
     (*check to make sure distance is in attack range*)
-        let move_amt = abs ((x1-x2)+(y1-y2)) in
-        if move_amt > u.curr_mvt (*filler code. where is attack range field*)
+        let range = abs ((x1-x2)+(y1-y2)) in
+        let base = base_access u in
+        if (range > base.attack_range)
           then (print_endline "Movement is too far"; g)
           else
     (*call battle function in util with two units. returns two units*)
@@ -88,6 +89,7 @@ let process_command (c:cmd) (g:gamestate) : gamestate =
     g
     end
   | Capture x -> (*same as attack but with unit, building on same space*)
+  (*only infantry can capture*)
   failwith "unimplemented"
   | Buy (u,x) -> failwith "unimplemented"
     (*check to make sure there is a building at x that is owned by the player*)
