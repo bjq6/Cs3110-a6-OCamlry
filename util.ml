@@ -8,6 +8,14 @@ let rec unit_at_loc (lst : unit_parameters list) (x : loc) =
   | [] -> None
   | h::t -> if h.position = x then Some h else unit_at_loc t x
 
+(*given location, returns building option. used in controller*)
+let rec b_at_loc (lst : building_parameters list) (x : loc) =
+  match lst with
+  | [] -> None
+  | h::t -> if h.position = x then Some h else b_at_loc t x
+
+
+
 (*next player given two players defined
 let next_player (g: gamestate) =
 if g.curr_player = Player1
@@ -29,6 +37,8 @@ let base_access (x : unit_parameters) =
   | Infantry -> infantry_base
   | Ocamlry -> ocamlry_base
   | Tank -> tank_base
+
+
 
 
 (*---------Commands from process command--------
