@@ -22,6 +22,7 @@ type base_unit = {
   max_hp : int;         (* Max health for a given type of unit *)
   max_mvt : int;        (* Max movement for a given type of unit*)
   unit_cost : int;      (* The cost of purchasing a single unit of said type*)
+  attack_range : int;   (* The max distance the unit can attack from*)
 }
 
 (* List of the above type *)
