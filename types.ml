@@ -8,7 +8,8 @@ type specific_unit_id = int
 (* A given player *)
 type player = {
   player_name : player_id;          (* who this player is *)
-  mutable money : int;                      (* How much money this player has*)
+  mutable money : int;              (* How much money this player has*)
+  mutable score : int;              (*score*)
 }
 
 (* Types of unit - all units start with the same base stats *)

@@ -9,6 +9,7 @@ type player_id = Player1 of string | Player2 of string
 type player = {
   player_name : player_id;      (* who this player is *)
   mutable money : int;                  (* How much money this player has*)
+  mutable score : int;
 }
 
 (* Types of unit - all units start with the same base stats *)
