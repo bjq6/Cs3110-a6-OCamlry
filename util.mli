@@ -22,6 +22,8 @@ val num_building : building_parameters list -> player_id -> int -> int
 
 val newvar : unit -> int
 
+val map_check : int*int -> terrain array array -> bool
+
 (*---------Commands from process command--------
 
 (** Given a unit *)

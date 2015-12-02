@@ -27,6 +27,12 @@ let process_command (c:cmd) (g:gamestate) : gamestate =
   | Move ((x1,y1),(x2,y2)) ->
     (*check to see if unit present belonging to current player*)
     begin
+
+    (*make sure inputs are on map*)
+    if (not (map_check (x1,y1) g.map)|| not (map_check (x2,y2) g.map))
+    then (print_endline "Input off map"; g)
+    else
+
     match (unit_at_loc g.unit_list (x1,y1)) with
     | None -> print_endline "No unit at this location"; g
     | Some u -> if (g.curr_player.player_name <> u.plyr)
@@ -58,6 +64,12 @@ let process_command (c:cmd) (g:gamestate) : gamestate =
   | Attack ((x1,y1),(x2,y2)) ->
     (*check x to see if unit present belonging to current player*)
     begin
+
+    (*make sure inputs are on map*)
+    if (not (map_check (x1,y1) g.map)|| not (map_check (x2,y2) g.map))
+    then (print_endline "Input off map"; g)
+    else
+
     match (unit_at_loc g.unit_list (x1,y1)) with
     | None -> print_endline "No unit at attack location"; g
     | Some u -> if (g.curr_player.player_name <> u.plyr)
@@ -85,6 +97,7 @@ let process_command (c:cmd) (g:gamestate) : gamestate =
     (*update gamestate with updated units*)
            g.unit_list <- new_unit_list;
            g.curr_player.score <- g.curr_player.score + i;
+
     (*return new gamestate*)
     g
     end
@@ -94,6 +107,11 @@ let process_command (c:cmd) (g:gamestate) : gamestate =
 
   (*check to see if unit present belonging to current player*)
     begin
+
+  (*make sure inputs are on map*)
+    if (not (map_check (x,y) g.map))
+    then (print_endline "Input off map"; g) else
+
     match (unit_at_loc g.unit_list (x,y)) with
     | None -> print_endline "No unit at attack location"; g
     | Some u -> if (g.curr_player.player_name <> u.plyr)
@@ -122,6 +140,11 @@ let process_command (c:cmd) (g:gamestate) : gamestate =
         let new_building_list = capture u.plyr b g.building_list in
     (*update gamestate with updated building list*)
           g.building_list <- new_building_list;
+
+    (*change building owner in map, update unit as inactive*)
+          ((g.map).(x).(y)) <- (Building (Some g.curr_player.player_name));
+          u.active <- false;
+
     (*return new gamestate*)
     g
 
@@ -129,6 +152,10 @@ let process_command (c:cmd) (g:gamestate) : gamestate =
 
   | Buy (u,x) ->
     (*u is base unit, x is loc of building*)
+
+    (*make sure inputs are on map*)
+    if (not (map_check x g.map)) then (print_endline "Input off map"; g) else
+
     (*check to make sure there is a building at x that is owned by the player*)
     let target = (b_at_loc g.building_list x) in
 

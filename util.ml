@@ -84,6 +84,18 @@ let rec num_building (lst : building_parameters list) (p : player_id) (i : int) 
   | h::t -> if h.owner = p
     then num_building t p (i+1) else num_building t p i
 
+(*make sure user input is not off the map *)
+let map_check ((a,b) : int*int) (m : terrain array array) =
+  let y = (Array.length m) in
+  let x = (Array.length (Array.get m 0)) in
+  (a >= 0) && (a < x) && (b >= 0) && (b < y)
+
+
+
+
+
+
+
 
 (*---------Commands from process command--------
 
