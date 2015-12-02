@@ -20,7 +20,7 @@ let max x y =
 let rec remove x lst =
   match lst with
   |[]->[]
-  |h::t->if (x=h) then t else remove x t
+  |h::t->if (x=h) then t else h::remove x t
 let attack (attacker:unit_parameters) (defender:unit_parameters)=
   let att_type = attacker.typ in
   let def_type = defender.typ in

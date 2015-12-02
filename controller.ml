@@ -164,7 +164,7 @@ let rec main (s:gamestate) =
   let cmd = getcmd (str) in
   (*process command*)
   let g = process_command cmd s in
-  let end_game = false  in (*Need to add something to type to see if game has ended*)
+  let end_game = g.game_over  in (*Need to add something to type to see if game has ended*)
   (*update view*)
   let () = update_state g in
   (*froot loop it and return unit. actual unit not matt unit*)

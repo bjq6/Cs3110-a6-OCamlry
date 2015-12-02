@@ -43,4 +43,5 @@ let state1 = {
   player_state = [p1; p2];
   unit_list = [p1_inf; p1_tank; p1_caml; p2_inf; p2_tank; p2_caml];
   building_list = [p1_building; p2_building];
+  game_over = false;
 }
