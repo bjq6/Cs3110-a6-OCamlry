@@ -6,11 +6,15 @@ val unit_at_loc : unit_parameters list -> loc -> unit_parameters option
 
 val b_at_loc : building_parameters list -> loc -> building_parameters option
 
+val next_player : gamestate -> player
+
 val base_access : unit_parameters -> base_unit
 
 val base_access_unit_type : unit_type -> base_unit
 
 val refresh : unit_parameters list -> unit
+
+val num_building : building_parameters list -> player_id -> int -> int
 
 (*---------Commands from process command--------
 

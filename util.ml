@@ -16,10 +16,11 @@ let rec b_at_loc (lst : building_parameters list) (x : loc) =
 
 
 
-(*next player given two players defined
+(*next player given two players defined *)
 let next_player (g: gamestate) =
-if g.curr_player = Player1
-then g.curr_player <- Player2 else g.curr_player <- Player1 *)
+  match g.curr_player.player_name with
+  | Player1 _ -> List.nth g.player_state 1
+  | Player2 _ -> List.nth g.player_state 0
 
 
 (*get base_unit info given unit_parameters*)
@@ -58,6 +59,12 @@ let rec refresh (lst : unit_parameters list) =
     refresh t
 
 
+(*find num of buildings owner by current player*)
+let rec num_building (lst : building_parameters list) (p : player_id) (i : int) =
+  match lst with
+  | [] -> i
+  | h::t -> if h.owner = p
+    then num_building t p (i+1) else num_building t p i
 
 
 (*---------Commands from process command--------

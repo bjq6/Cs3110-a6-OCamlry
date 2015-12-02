@@ -32,9 +32,10 @@ let process_command (c:cmd) (g:gamestate) : gamestate =
     print_endline "Clarkson wins"; exit 0
   | EndTurn ->
     (*modify gamestate to change player*)
-
+      g.curr_player <- next_player g;
     (*add money to new players bank(100 per building owned)*)
-      g.curr_player.money <- g.curr_player.money + 100;
+      let num = num_building g.building_list g.curr_player.player_name 0 in
+      g.curr_player.money <- g.curr_player.money + (num*100);
     (*refresh all unit(have refresh func in util); return g*)
       refresh g.unit_list; g
 
