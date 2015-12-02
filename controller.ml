@@ -1,5 +1,4 @@
 open Types
-
 open Getcmd
 
 (** Starts the REPL *)
@@ -22,7 +21,7 @@ let rec main (s:gamestate) = failwith "unimplemented"
 (** Process command will receive a command from the user module, make sense of it
  * and call the proper process function below - basically a wrapper for below *)
 let process_command (c:cmd) (g:gamestate) : gamestate = failwith "unimplemented"
-
+(*
   match c with
   | Invalid s -> printf "%s\n" s; g
   | Surrender -> (*surrender protocol*)
@@ -44,5 +43,5 @@ let process_command (c:cmd) (g:gamestate) : gamestate = failwith "unimplemented"
     (*return new gamestate*)
   | Capture x -> (*same as attack but with unit, building on same space*)
   | Buy (u,x) ->
-
+*)
 

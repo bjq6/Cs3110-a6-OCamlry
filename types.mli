@@ -61,3 +61,11 @@ type gamestate = {
   building_list : building_parameters list;  (* all the buildings in game *)
   (*updated : gamestate Deferred.t;  (*updated*)*)
 }
+type cmd =
+    |Move of loc * loc
+    |Attack of loc * loc
+    |Capture of loc
+    |Buy of unit_type * loc
+    |Invalid of bytes
+    |Surrender
+    |EndTurn

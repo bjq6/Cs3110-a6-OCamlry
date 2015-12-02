@@ -11,8 +11,6 @@ open Types
 
 
 
-
-
 let rec splitWords str1 =
       let str = String.trim(str1)^" " in
       match str with
@@ -48,40 +46,44 @@ let getcmd (player:bytes) =
   Printf.printf "Player %s's turn to move\n" player;
   let str = read_line () in
   let words = splitWords(str) in
-  if words = [] then Invalid "No Command" else
+  if words = [] then (Invalid "No Command") else
     match String.lowercase(List.hd words) with
     |"move" ->
           let snd = List.tl words in
-          if List.length snd = 2
-          then
-          let l1 = List.map string2pair snd in
-          match l1 with
-            |Some x::Some y::[]-> Move (x,y)
-            |_->Invalid "Error Parsing Move Command"
+          if List.length snd = 2 then
+            let l1 = List.map string2pair snd in
+            match l1 with
+              |Some x::Some y::[]-> Move (x,y)
+              |_->Invalid "Error Parsing Move Command"
           else
-          Invalid "Invalid Move Command"
+            Invalid "Invalid Move Command"
     |"attack" ->
           let snd = List.tl words in
-          if List.length snd = 2
-          then
-          let l1 = List.map string2pair snd in
-          match l1 with
-            |Some x::Some y::[]-> Attack (x,y)
-            |_->Invalid "Error Parsing Attack Command"
+          if List.length snd = 2 then
+            let l1 = List.map string2pair snd in
+            match l1 with
+              |Some x::Some y::[]-> Attack (x,y)
+              |_->Invalid "Error Parsing Attack Command"
           else
-          Invalid "Invalid Attack Command"
+            Invalid "Invalid Attack Command"
     |"buy" ->
           let snd = List.tl words in
-          if List.length snd = 2
-          then
-          let one = string2int (List.hd snd) in
-          let two = string2pair (List.nth snd 1) in
-          match (one,two) with
-            |(Some x,Some y)-> Buy (x,y)
-            |_->Invalid "Error Parsing Buy Command"
+          if List.length snd = 2 then
+            let one = string2int (List.hd snd) in
+            let two = string2pair (List.nth snd 1) in
+            match (one,two) with
+              |(Some _,Some y)-> Buy (Infantry,y)
+              |_->Invalid "Error Parsing Buy Command"
           else
-          Invalid "Invalid Buy Command"
+            Invalid "Invalid Buy Command"
     |"surrender"->Surrender
     |"quit"->Surrender
     |"end" ->EndTurn
     |_-> Invalid "Unknown Command"
+
+
+(*Code for testing*)
+let x = getcmd "1" in
+match x with
+|Invalid s ->Printf.printf "%s\n" s
+|_ -> Printf.printf "Valid Command\n"
