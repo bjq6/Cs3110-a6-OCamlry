@@ -96,9 +96,10 @@ let process_command (c:cmd) (g:gamestate) : gamestate =
           then (print_endline "Movement is too far"; g)
           else
     (*call battle function in util with two units. returns unit list*)
-           let new_unit_list = battle u target g.unit_list in
+           let (i, new_unit_list) = battle u target g.unit_list in
     (*update gamestate with updated units*)
            g.unit_list <- new_unit_list;
+           g.curr_player.score <- g.curr_player.score + i;
     (*return new gamestate*)
     g
     end
