@@ -2,24 +2,13 @@ open Types
 open Util
 open Getcmd
 open Battle
-
+open View
 (** Starts the REPL *)
 let begin_game () = ()
 
 (** Takes in an int representing a map (first thing asked for in REPL) and
  * sets ups a game *)
 let configure (i:int) = failwith "unimplemented"
-
-(** Loop/Repl - prompts user, process_command, update gamestate, call main again *)
-let rec main (s:gamestate) = failwith "unimplemented"
-(*check if AI; get command from AI or user*)
-
-(*process command*)
-
-(*update view*)
-
-(*froot loop it and return unit. actual unit not matt unit*)
-
 (** Process command will receive a command from the user module, make sense of it
  * and call the proper process function below - basically a wrapper for below *)
 (*you are welcome to clean this up, just trying to get something to work now*)
@@ -172,3 +161,16 @@ let process_command (c:cmd) (g:gamestate) : gamestate =
     (*update the gamestate*)
     g)
 
+
+(** Loop/Repl - prompts user, process_command, update gamestate, call main again *)
+let rec main (s:gamestate) =
+(*check if AI; get command from AI or user*)
+let str = match s.curr_player.player_name with Player1 s -> s |Player2 s-> s in
+let cmd = getcmd (str) in
+(*process command*)
+let g = process_command cmd s in
+let end_game = false  in (*Need to add something to type to see if game has ended*)
+(*update view*)
+let () = update_state g in
+(*froot loop it and return unit. actual unit not matt unit*)
+if end_game then () else main g
