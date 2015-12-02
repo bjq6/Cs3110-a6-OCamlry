@@ -1,15 +1,13 @@
-open Graphics
-open Types
 (*Define the colors and variables that will be used in the game.  These 
  * include tyle colors, active/inactive unit colors, and neutral colors
  *)
 let curr_x = ref 0 
 let curr_y = ref 0 
-let water_color = Graphics.rgb 0 191 255 
+let water_color = Graphics.cyan 
 let plain_color = Graphics.rgb 153 255 153 
 let player1_color = Graphics.red
 let player1_inactive_color = Graphics.rgb 201 136 136 
-let player2_color = Graphics.blue
+let player2_color = Graphics.yellow
 let player2_inactive_color = Graphics.rgb 140 140 212
 let neutral_color = Graphics.white
 (*The followind two functions below should take in the raw game map 
@@ -123,6 +121,11 @@ let get_color unit_to_draw =
   |(Player2 _, true) -> player2_color
   |(Player2 _, false) -> player2_inactive_color
 
+
+let draw_unit_status (x,y) hp delta_x delta_y = 
+  Graphics.moveto (x*delta_x + delta_x*3/10) (y*delta_y + delta_y*3/10);
+  Graphics.draw_string (string_of_int hp)
+
 let draw_unit unit_to_draw delta_x delta_y = 
   Graphics.set_color (get_color unit_to_draw);
   (match unit_to_draw.typ with
@@ -130,10 +133,11 @@ let draw_unit unit_to_draw delta_x delta_y =
   |Ocamlry  -> draw_ocamlry unit_to_draw.position delta_x delta_y
   |Tank     -> draw_tank unit_to_draw.position delta_x delta_y );
   Graphics.set_color (Graphics.black);
-  match unit_to_draw.typ with
+  (match unit_to_draw.typ with
   |Infantry -> draw_infantry_outline unit_to_draw.position delta_x delta_y
   |Ocamlry  -> draw_ocamlry_outline unit_to_draw.position delta_x delta_y
-  |Tank     -> draw_tank_outline unit_to_draw.position delta_x delta_y 
+  |Tank     -> draw_tank_outline unit_to_draw.position delta_x delta_y );
+  draw_unit_status unit_to_draw.position (unit_to_draw.curr_hp) delta_x delta_y
    
 
 let populate_map gamestate = 
