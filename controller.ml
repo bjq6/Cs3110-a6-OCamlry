@@ -2,13 +2,17 @@ open Types
 open Util
 open Getcmd
 open Battle
+open Gamestates
 
 (** Starts the REPL *)
 let begin_game () = ()
 
 (** Takes in an int representing a map (first thing asked for in REPL) and
  * sets ups a game *)
-let configure (i:int) = failwith "unimplemented"
+let configure (i:int) : gamestate=
+  print_bytes("Loading map ");print_int(i);
+  Gamestates.state1
+
 
 (** Loop/Repl - prompts user, process_command, update gamestate, call main again *)
 let rec main (s:gamestate) = failwith "unimplemented"

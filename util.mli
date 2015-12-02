@@ -14,6 +14,10 @@ val base_access_unit_type : unit_type -> base_unit
 
 val refresh : unit_parameters list -> unit
 
+val create_unit : player_id -> int -> int -> unit_type -> unit_parameters
+
+val create_building : player_id -> int -> int -> building_parameters
+
 val num_building : building_parameters list -> player_id -> int -> int
 
 (*---------Commands from process command--------
