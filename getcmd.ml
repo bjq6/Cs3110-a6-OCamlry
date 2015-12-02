@@ -54,7 +54,7 @@ let string2unit str =
 
 
 let getcmd (player:bytes) =
-  Printf.printf "Player %s's turn to move\n" player;
+  Printf.printf "%s's turn to move\n" player;
   let str = read_line () in
   let words = splitWords(str) in
   if words = [] then (Invalid "No Command") else

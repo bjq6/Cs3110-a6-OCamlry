@@ -3,26 +3,7 @@ open Util
 open Getcmd
 open Battle
 open Gamestates
-
-(** Starts the REPL *)
-let begin_game () = ()
-
-(** Takes in an int representing a map (first thing asked for in REPL) and
- * sets ups a game *)
-let configure (i:int) : gamestate=
-  print_bytes("Loading map ");print_int(i);
-  Gamestates.state1
-
-
-(** Loop/Repl - prompts user, process_command, update gamestate, call main again *)
-let rec main (s:gamestate) = failwith "unimplemented"
-(*check if AI; get command from AI or user*)
-
-(*process command*)
-
-(*update view*)
-
-(*froot loop it and return unit. actual unit not matt unit*)
+open View
 
 (** Process command will receive a command from the user module, make sense of it
  * and call the proper process function below - basically a wrapper for below *)
@@ -90,7 +71,7 @@ let process_command (c:cmd) (g:gamestate) : gamestate =
     (*check y to see if unit present belonging to enemy*)
       match (unit_at_loc g.unit_list (x2,y2)) with
       | None -> print_endline "No unit at target location"; g
-      | Some target -> if (g.curr_player.player_name = u.plyr)
+      | Some target -> if (g.curr_player.player_name = target.plyr)
         then (print_endline "You can't attack yourself :/"; g)
         else
     (*check to make sure distance is in attack range*)
@@ -100,9 +81,10 @@ let process_command (c:cmd) (g:gamestate) : gamestate =
           then (print_endline "Movement is too far"; g)
           else
     (*call battle function in util with two units. returns unit list*)
-           let new_unit_list = battle u target g.unit_list in
+           let (i, new_unit_list) = battle u target g.unit_list in
     (*update gamestate with updated units*)
            g.unit_list <- new_unit_list;
+           g.curr_player.score <- g.curr_player.score + i;
     (*return new gamestate*)
     g
     end
@@ -175,3 +157,30 @@ let process_command (c:cmd) (g:gamestate) : gamestate =
     (*update the gamestate*)
     g)
 
+(** Loop/Repl - prompts user, process_command, update gamestate, call main again *)
+let rec main (s:gamestate) =
+  (*check if AI; get command from AI or user*)
+  let str = match s.curr_player.player_name with Player1 s -> s |Player2 s-> s in
+  let cmd = getcmd (str) in
+  (*process command*)
+  let g = process_command cmd s in
+  let end_game = false  in (*Need to add something to type to see if game has ended*)
+  (*update view*)
+  let () = update_state g in
+  (*froot loop it and return unit. actual unit not matt unit*)
+  if end_game then () else main g
+
+
+(** Takes in an int representing a map (first thing asked for in REPL) and
+ * sets ups a game *)
+let configure (i:int) : gamestate=
+  print_bytes("Loading map ");print_int(i);print_endline("");
+  Gamestates.state1
+
+  (** Starts the REPL *)
+let begin_game () =
+    let main_state = configure 1 in
+    let () = init(main_state) in
+    main(main_state)
+
+let _ = begin_game ()
