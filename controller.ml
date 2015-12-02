@@ -166,7 +166,6 @@ let process_command (c:cmd) (g:gamestate) : gamestate =
             unit_id = 3110; active = false; curr_hp = product.max_hp;
             curr_mvt = product.max_mvt; position = x} in
             g.unit_list <- (new_u :: g.unit_list);
-            g.curr_player.unit_ids <- (new_u.unit_id :: g.curr_player.unit_ids);
 
     (*update the gamestate*)
     g)

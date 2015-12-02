@@ -9,8 +9,6 @@ type specific_unit_id = int
 type player = {
   player_name : player_id;          (* who this player is *)
   mutable money : int;                      (* How much money this player has*)
-  mutable building_ids : int list;          (* All the buildings owned by this player *)
-  mutable unit_ids : specific_unit_id list; (* All the units owned by this player*)
 }
 
 (* Types of unit - all units start with the same base stats *)
