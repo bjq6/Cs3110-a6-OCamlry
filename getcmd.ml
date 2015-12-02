@@ -59,7 +59,7 @@ let getcmd (player:bytes) =
   let words = splitWords(str) in
   if words = [] then (Invalid "No Command") else
     match String.lowercase(List.hd words) with
-    |"move" ->
+    |"move" | "mv" | "m" ->
           let snd = List.tl words in
           if List.length snd = 2 then
             let l1 = List.map string2pair snd in
@@ -68,7 +68,7 @@ let getcmd (player:bytes) =
               |_->Invalid "Error Parsing Move Command"
           else
             Invalid "Invalid Move Command"
-    |"attack" ->
+    |"attack" | "a" ->
           let snd = List.tl words in
           if List.length snd = 2 then
             let l1 = List.map string2pair snd in
@@ -77,7 +77,7 @@ let getcmd (player:bytes) =
               |_->Invalid "Error Parsing Attack Command"
           else
             Invalid "Invalid Attack Command"
-    |"buy" ->
+    |"buy" | "b" ->
           let snd = List.tl words in
           if List.length snd = 2
           then
@@ -88,7 +88,7 @@ let getcmd (player:bytes) =
             |_->Invalid "Error Parsing Buy Command"
           else
           Invalid "Invalid Buy Command"
-    |"capture"->
+    |"capture" | "c" ->
           let snd = List.tl words in
           if List.length snd = 1
           then
@@ -97,9 +97,8 @@ let getcmd (player:bytes) =
             |_-> Invalid "Error Parsing Capture Command"
           else
             Invalid "Invalid Capture Command"
-    |"surrender"->Surrender
-    |"quit"->Surrender
-    |"end" ->EndTurn
+    |"surrender" | "quit" -> Surrender
+    |"end" -> EndTurn
     |_-> Invalid "Unknown Command"
 
 

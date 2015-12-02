@@ -16,7 +16,7 @@ let test_init_state3 = {
           [|Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain|];
           [|Plain; Plain; Plain; Plain; Plain; Plain; Plain; Building (Some (Player2 "")); Plain; Plain|]
           |];
-  curr_player = {player_name = Player1 ""; money= 0; score = 0};
+  curr_player = {player_name = Player1 "Matt"; money= 69; score = -1};
   player_state = [];
   unit_list =
     [create_dummy_unit (Player1 "") 0 0 (Infantry);
@@ -26,6 +26,7 @@ let test_init_state3 = {
      create_dummy_unit (Player2 "") 9 8 (Tank);
      create_dummy_unit (Player2 "") 9 7 (Ocamlry)];
   building_list = [];
+  game_over = false
 }
 
 let test_init_state4= {
@@ -50,6 +51,7 @@ let test_init_state4= {
      create_dummy_unit (Player2 "") 9 8 (Tank);
      create_dummy_unit (Player2 "") 9 7 (Ocamlry)];
   building_list = [];
+  game_over = false;
 }
 
 

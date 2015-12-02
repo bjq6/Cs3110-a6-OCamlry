@@ -10,7 +10,7 @@ let plain_color = Graphics.rgb 153 255 153
 let player1_color = Graphics.red
 let player1_inactive_color = Graphics.rgb 201 136 136
 let player2_color = Graphics.yellow
-let player2_inactive_color = Graphics.rgb 140 140 212
+let player2_inactive_color = Graphics.rgb 212 197 66
 let neutral_color = Graphics.white
 (*The followind two functions below should take in the raw game map
  * (which at this point is an array of array and then return a new
@@ -71,7 +71,14 @@ let create_map gamestate =
   let delta_y = 600/num_vert_tiles in
   curr_y := -delta_y;
   draw_map gamestate.map delta_x delta_y;
-  draw_grid delta_x delta_y
+  draw_grid delta_x delta_y;
+  for i=0 to num_vert_tiles - 1 do 
+    for j=0 to num_hor_tiles - 1 do
+      Graphics.moveto (j*delta_x + delta_x*7/10) (i*delta_y);
+      Graphics.draw_string ((string_of_int j) ^","^ (string_of_int i)) ;
+    done
+  done
+
   (*At this point, we should now have a map that is processed and ready to get
    * filed*)
 (*Helper functions to use when drawing units in the map *)
@@ -149,7 +156,17 @@ let populate_map gamestate =
 
 let depopulate_map gamestate = create_map gamestate
 
-let update_status_bar gamestate = failwith "unimplemented"
+let update_status_bar gamestate =
+  let player_name = (match gamestate.curr_player.player_name with
+    |Player1 s -> s | Player2 s -> s) in
+  let money = gamestate.curr_player.money in
+  let score = gamestate.curr_player.score in
+  Graphics.moveto 20 630;
+  Graphics.draw_string ("Current Player: " ^ player_name);
+  Graphics.moveto 20 620;
+  Graphics.draw_string ("Money: " ^ (string_of_int money));
+  Graphics.moveto 20 610;
+  Graphics.draw_string ("Score: " ^ (string_of_int score))
 
 (*let observe_gamestate gamestate =
   upon gamestate.update (fun updated_state ->
@@ -160,8 +177,12 @@ let update_status_bar gamestate = failwith "unimplemented"
 *)
 let update_state new_gamestate =
   depopulate_map new_gamestate;
-  populate_map new_gamestate
+  populate_map new_gamestate;
+  update_status_bar new_gamestate
+
 
 let init gamestate =
   create_map gamestate;
-  populate_map gamestate
+  populate_map gamestate;
+  update_status_bar gamestate
+
