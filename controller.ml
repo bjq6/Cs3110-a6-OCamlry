@@ -72,7 +72,7 @@ let process_command (c:cmd) (g:gamestate) : gamestate =
       match (unit_at_loc g.unit_list (x2,y2)) with
       | None -> print_endline "No unit at target location"; g
       | Some target -> if (g.curr_player.player_name = target.plyr)
-        then (print_endline "You can't attack yourself :/"; g)
+        then (print_endline "You can't attack yourself :("; g)
         else
     (*check to make sure distance is in attack range*)
         let range = abs (x1-x2) + abs (y1-y2) in
@@ -150,7 +150,7 @@ let process_command (c:cmd) (g:gamestate) : gamestate =
             (g.curr_player.money <- g.curr_player.money - product.unit_cost;
     (*add a unit to the unit list at x that is inactive(cannot move or attack)*)
             let new_u = {typ = u; plyr = g.curr_player.player_name;
-            unit_id = 3110; active = false; curr_hp = product.max_hp;
+            unit_id = (newvar ()); active = false; curr_hp = product.max_hp;
             curr_mvt = product.max_mvt; position = x} in
             g.unit_list <- (new_u :: g.unit_list);
 

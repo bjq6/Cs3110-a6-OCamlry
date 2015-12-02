@@ -1,7 +1,5 @@
 open Types
 
-val print_map : gamestate -> unit
-
 val unit_at_loc : unit_parameters list -> loc -> unit_parameters option
 
 val b_at_loc : building_parameters list -> loc -> building_parameters option
@@ -19,6 +17,8 @@ val create_unit : player_id -> int -> int -> unit_type -> unit_parameters
 val create_building : player_id -> int -> int -> building_parameters
 
 val num_building : building_parameters list -> player_id -> int -> int
+
+val newvar : unit -> int
 
 (*---------Commands from process command--------
 
