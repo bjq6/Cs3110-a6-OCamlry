@@ -20,7 +20,7 @@ let max x y =
 let rec remove x lst =
   match lst with
   |[]->[]
-  |h::t->if (x=h) then t else remove x t
+  |h::t->if (x=h) then t else h::remove x t
 let attack (attacker:unit_parameters) (defender:unit_parameters)=
   let att_type = attacker.typ in
   let def_type = defender.typ in
@@ -57,19 +57,21 @@ let sim_battle (attacker:unit_parameters)(defender:unit_parameters):(int*int) =
     let () = attack_sim defender attacker in
     (attacker.curr_hp,defender.curr_hp)
 let battle (attacker:unit_parameters)(defender:unit_parameters)
-              (unit_list:unit_parameters list):unit_parameters list =
+              (unit_list:unit_parameters list):(int*unit_parameters list) =
   let lst = remove attacker (remove defender unit_list) in
   let () = attack attacker defender in
   if defender.curr_hp = 0
   then
+    let dscore = match defender.typ with Infantry -> 1|Ocamlry -> 2|Tank -> 3 in
     let () = attacker.active<-false in
-    attacker::lst
+    (dscore,attacker::lst)
   else
     let () = attack defender attacker in
     if attacker.curr_hp = 0
     then
-      defender::lst
+      let ascore = match attacker.typ with|Infantry -> -1|Ocamlry -> -2|Tank -> -3 in
+      (ascore,defender::lst)
     else
       let () = attacker.active<-false in
-      attacker::defender::lst
+      (0,attacker::defender::lst)
 

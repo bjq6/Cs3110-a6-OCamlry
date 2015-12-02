@@ -26,6 +26,7 @@ let test_init_state3 = {
      create_dummy_unit (Player2 "") 9 8 (Tank);
      create_dummy_unit (Player2 "") 9 7 (Ocamlry)];
   building_list = [];
+  game_over = false
 }
 
 let test_init_state4= {
@@ -50,6 +51,7 @@ let test_init_state4= {
      create_dummy_unit (Player2 "") 9 8 (Tank);
      create_dummy_unit (Player2 "") 9 7 (Ocamlry)];
   building_list = [];
+  game_over = false;
 }
 
 

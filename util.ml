@@ -22,7 +22,6 @@ let next_player (g: gamestate) =
   | Player1 _ -> List.nth g.player_state 1
   | Player2 _ -> List.nth g.player_state 0
 
-
 (*get base_unit info given unit_parameters*)
 
 let infantry_base = {unit_typ = Infantry; max_hp = 100; max_mvt = 3;
@@ -47,6 +46,25 @@ let base_access_unit_type (x : unit_type) =
   | Ocamlry -> ocamlry_base
   | Tank -> tank_base
 
+(** generate an unused type variable *)
+let next_var1  = ref 0
+let newvar () =
+    next_var1 := 1 + !next_var1;
+    !next_var1
+
+let create_unit owner x y typ = {
+  typ = typ; plyr = owner; unit_id= newvar (); active = true;
+  curr_hp = (base_access_unit_type typ).max_hp;
+  curr_mvt = (base_access_unit_type typ).max_mvt;
+  position = (x,y);
+  }
+
+let create_building owner x y = {
+  max_hp = 2;
+  owner = owner;
+  curr_hp = 2;
+  position = (x,y);
+  }
 
 (*refresh all units at the end of each turn*)
 let rec refresh (lst : unit_parameters list) =

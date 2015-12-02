@@ -1,12 +1,15 @@
 open Types
 open Graphics
 
-(*This will have the value of the old gamestate saved on to it 
+(*This will have the value of the old gamestate saved on to it
  *)
 (*val log : gamestate ref*)
  (*Function that will observe the gamestate and once it is updated will update
   * the graphics*)
 (*val observe_gamestate : gamestate -> unit*)
+val init : gamestate -> unit
+
+val update_state : gamestate -> unit
 
 val create_map : gamestate -> unit
 
