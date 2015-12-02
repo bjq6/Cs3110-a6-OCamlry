@@ -18,6 +18,8 @@ val create_building : player_id -> int -> int -> building_parameters
 
 val num_building : building_parameters list -> player_id -> int -> int
 
+val newvar : unit -> int
+
 (*---------Commands from process command--------
 
 (** Given a unit *)
