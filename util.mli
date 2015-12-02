@@ -2,7 +2,17 @@ open Types
 
 val print_map : gamestate -> unit
 
-(*---------Commands from process command--------*)
+val unit_at_loc : unit_parameters list -> loc -> unit_parameters option
+
+val b_at_loc : building_parameters list -> loc -> building_parameters option
+
+val base_access : unit_parameters -> base_unit
+
+val base_access_unit_type : unit_type -> base_unit
+
+val refresh : unit_parameters list -> unit
+
+(*---------Commands from process command--------
 
 (** Given a unit *)
 val process_movement : loc * loc ->  gamestate
@@ -26,4 +36,4 @@ val process_surrender : unit -> unit
   * command *)
 val process_invalid : unit -> gamestate
 
-(*---------------------------------------------*)
+---------------------------------------------*)

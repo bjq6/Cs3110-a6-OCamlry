@@ -2,7 +2,65 @@ open Types
 
 let print_map (g:gamestate) = failwith "unimplemented"
 
-(*---------Commands from process command--------*)
+(*given location, returns unit option. used in controller*)
+let rec unit_at_loc (lst : unit_parameters list) (x : loc) =
+  match lst with
+  | [] -> None
+  | h::t -> if h.position = x then Some h else unit_at_loc t x
+
+(*given location, returns building option. used in controller*)
+let rec b_at_loc (lst : building_parameters list) (x : loc) =
+  match lst with
+  | [] -> None
+  | h::t -> if h.position = x then Some h else b_at_loc t x
+
+
+
+(*next player given two players defined
+let next_player (g: gamestate) =
+if g.curr_player = Player1
+then g.curr_player <- Player2 else g.curr_player <- Player1 *)
+
+
+(*get base_unit info given unit_parameters*)
+
+let infantry_base = {unit_typ = Infantry; max_hp = 100; max_mvt = 3;
+  unit_cost = 200; attack_range = 1}
+
+let ocamlry_base = {unit_typ = Ocamlry; max_hp = 150; max_mvt = 5;
+  unit_cost = 500; attack_range = 1}
+
+let tank_base = {unit_typ = Tank; max_hp = 250; max_mvt = 4;
+  unit_cost = 1000; attack_range = 1}
+
+
+let base_access (x : unit_parameters) =
+  match x.typ with
+  | Infantry -> infantry_base
+  | Ocamlry -> ocamlry_base
+  | Tank -> tank_base
+
+let base_access_unit_type (x : unit_type) =
+  match x with
+  | Infantry -> infantry_base
+  | Ocamlry -> ocamlry_base
+  | Tank -> tank_base
+
+
+(*refresh all units at the end of each turn*)
+let rec refresh (lst : unit_parameters list) =
+  match lst with
+  | [] -> ()
+  | h::t ->
+    h.active <- true;
+    let base = base_access h in
+    h.curr_mvt <- base.max_mvt;
+    refresh t
+
+
+
+
+(*---------Commands from process command--------
 
 (** Given a unit *)
 let process_movement ((x1,y1),(x2,y2)) = failwith "unimplemented"
@@ -26,4 +84,4 @@ let process_surrender () = failwith "unimplemented"
   * command *)
 let process_invalid () = failwith "unimplemented"
 
-(*---------------------------------------------*)
+---------------------------------------------*)

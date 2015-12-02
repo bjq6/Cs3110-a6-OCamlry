@@ -36,10 +36,21 @@ let string2pair str =
    Some(List.hd l2,List.nth l2 1)
   with Failure "int_of_string"->None
 
+let unit2str un =
+  match un with
+  |Infantry -> "Infantry"
+  | Ocamlry -> "Ocamlry"
+  | Tank    -> "Tank"
 
-let string2int str =
-  try  Some(int_of_string str)
-  with Failure "int_of_string"-> None
+let string2unit str =
+  match String.lowercase(str) with
+  |"tank"->Some Tank
+  |"t"->Some Tank
+  |"ocamlry"->Some Ocamlry
+  |"o"->Some Ocamlry
+  |"infantry"->Some Infantry
+  |"i"->Some Infantry
+  |_->None
 
 
 let getcmd (player:bytes) =
@@ -68,22 +79,28 @@ let getcmd (player:bytes) =
             Invalid "Invalid Attack Command"
     |"buy" ->
           let snd = List.tl words in
-          if List.length snd = 2 then
-            let one = string2int (List.hd snd) in
-            let two = string2pair (List.nth snd 1) in
-            match (one,two) with
-              |(Some _,Some y)-> Buy (Infantry,y)
-              |_->Invalid "Error Parsing Buy Command"
+          if List.length snd = 2
+          then
+          let one = string2unit (List.hd snd) in
+          let two = string2pair (List.nth snd 1) in
+          match (one,two) with
+            |(Some x,Some y)-> Buy (x,y)
+            |_->Invalid "Error Parsing Buy Command"
           else
-            Invalid "Invalid Buy Command"
+          Invalid "Invalid Buy Command"
+    |"capture"->
+          let snd = List.tl words in
+          if List.length snd = 1
+          then
+            match string2pair (List.hd snd) with
+            |Some x -> Capture x
+            |_-> Invalid "Error Parsing Capture Command"
+          else
+            Invalid "Invalid Capture Command"
     |"surrender"->Surrender
     |"quit"->Surrender
     |"end" ->EndTurn
     |_-> Invalid "Unknown Command"
 
 
-(*Code for testing*)
-let x = getcmd "1" in
-match x with
-|Invalid s ->Printf.printf "%s\n" s
-|_ -> Printf.printf "Valid Command\n"
+
