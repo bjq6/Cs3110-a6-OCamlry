@@ -147,7 +147,17 @@ let populate_map gamestate =
 
 let depopulate_map gamestate = create_map gamestate
 
-let update_status_bar gamestate = failwith "unimplemented"
+let update_status_bar gamestate =
+  let player_name = (match gamestate.curr_player.player_name with 
+    |Player1 s -> s | Player2 s -> s) in 
+  let money = gamestate.curr_player.money in 
+  let score = gamestate.curr_player.score in
+  Graphics.moveto 20 630;
+  Graphics.draw_string ("Current Player: " ^ player_name);
+  Graphics.moveto 20 620;
+  Graphics.draw_string ("Money: " ^ (string_of_int money));
+  Graphics.moveto 20 610;
+  Graphics.draw_string ("Score: " ^ (string_of_int score))
 
 (*let observe_gamestate gamestate = 
   upon gamestate.update (fun updated_state ->
@@ -162,4 +172,5 @@ let update_state new_gamestate =
 
 let init gamestate =  
   create_map gamestate; 
-  populate_map gamestate
+  populate_map gamestate;
+  update_status_bar gamestate
