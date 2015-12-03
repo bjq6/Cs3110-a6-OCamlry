@@ -84,6 +84,14 @@ let rec num_building (lst : building_parameters list) (p : player_id) (i : int) 
   | h::t -> if h.owner = p
     then num_building t p (i+1) else num_building t p i
 
+(*find units owned by current player*)
+let rec get_units (lst : unit_parameters list) (p : player_id)
+   (out : unit_parameters list) =
+  match lst with
+  | [] -> out
+  | h::t -> if h.plyr = p
+    then get_units t p (h::out) else get_units t p out
+
 (*make sure user input is not off the map *)
 let map_check ((a,b) : int*int) (m : terrain array array) =
   let y = (Array.length m) in
