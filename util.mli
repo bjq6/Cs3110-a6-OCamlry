@@ -23,6 +23,10 @@ val get_units : unit_parameters list -> player_id -> unit_parameters list ->
 
 val newvar : unit -> int
 
+val sort_units : unit_parameters list -> (unit_parameters list *
+  unit_parameters list * unit_parameters list) ->
+  unit_parameters list * unit_parameters list * unit_parameters list
+
 val map_check : int*int -> terrain array array -> bool
 
 (*---------Commands from process command--------

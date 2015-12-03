@@ -92,6 +92,17 @@ let rec get_units (lst : unit_parameters list) (p : player_id)
   | h::t -> if h.plyr = p
     then get_units t p (h::out) else get_units t p out
 
+(*given a player's units, sort them into lists by unit type. For AI.
+ * Initialize with empty list tuple ([],[],[])*)
+let rec sort_units (lst : unit_parameters list) (i,o,tnk) =
+  match lst with
+  | [] -> (i,o,tnk)
+  | h::t ->
+    match h.typ with
+    | Infantry -> sort_units t (h::i, o, tnk)
+    | Ocamlry -> sort_units t (i, h::o, tnk)
+    | Tank -> sort_units t (i, o, h::tnk)
+
 (*make sure user input is not off the map *)
 let map_check ((a,b) : int*int) (m : terrain array array) =
   let y = (Array.length m) in
