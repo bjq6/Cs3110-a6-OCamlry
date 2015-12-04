@@ -208,35 +208,68 @@ let move_towards_enemy_unit (u : unit_parameters) (lst : unit_parameters list)
     end
 
 (* return list of current player's buildings that are unoccupied.
- * initialize b as empty list )
+ * initialize b as empty list *)
 let rec my_buildings (g : gamestate) (lst : building_parameters list)
   (b : building_parameters list) =
   match lst with
   | [] -> b
   | h::t ->
-    if (h.owner = g.curr_player) && (unit_at_loc g.unit_list h.position <> None)
-    then my_buildings g t h::b else my_buildings g t b
+    if (h.owner = g.curr_player.player_name)
+      && (unit_at_loc g.unit_list h.position <> None)
+    then my_buildings g t (h::b) else my_buildings g t b
 
-( helper function for buy_ai )
-let rec purchase (a,b,c) money (b_lst : building_parameters list)
-  (cd : cmd list)=
+(* helper function for buy_ai. a = infantry, b = ocamlry, c = tank *)
+(* (a,b,c) ints representing list lengths*)
+let rec purchase ((a':int),(b':int),(c':int)) (money : int)
+  (b_lst : building_parameters list) (cd : cmd list)=
+  let mini = List.sort compare [a';b';c'] in
+  let i = base_access_unit_type Infantry in
+  let o = base_access_unit_type Ocamlry in
+  let tnk = base_access_unit_type Tank in
+  match b_lst with
+  | [] -> cd
+  | h::t ->
+  if (List.nth mini 0 = a') && (money >= i.unit_cost) then
+    purchase (a'+1,b',c') (money - i.unit_cost) t
+    ((Buy (Infantry,h.position))::cd)
+  else if (List.nth mini 0 = b') && (money >= o.unit_cost) then
+    purchase (a',b'+1,c') (money - o.unit_cost) t
+    ((Buy (Ocamlry,h.position))::cd)
+  else if (List.nth mini 0 = c') && (money >= tnk.unit_cost) then
+    purchase (a',b',c'+1) (money - tnk.unit_cost) t
+    ((Buy (Tank,h.position))::cd)
+  else if (List.nth mini 1 = a') && (money >= i.unit_cost) then
+    purchase (a'+1,b',c') (money - i.unit_cost) t
+    ((Buy (Infantry,h.position))::cd)
+  else if (List.nth mini 1 = b') && (money >= o.unit_cost) then
+    purchase (a',b'+1,c') (money - o.unit_cost) t
+    ((Buy (Ocamlry,h.position))::cd)
+  else if (List.nth mini 1 = c') && (money >= tnk.unit_cost) then
+    purchase (a',b',c'+1) (money - tnk.unit_cost) t
+    ((Buy (Tank,h.position))::cd)
+  else if (List.nth mini 2 = a') && (money >= i.unit_cost) then
+    purchase (a'+1,b',c') (money - i.unit_cost) t
+    ((Buy (Infantry,h.position))::cd)
+  else if (List.nth mini 2 = b') && (money >= o.unit_cost) then
+    purchase (a',b'+1,c') (money - o.unit_cost) t
+    ((Buy (Ocamlry,h.position))::cd)
+  else if (List.nth mini 2 = c') && (money >= tnk.unit_cost) then
+    purchase (a',b',c'+1) (money - tnk.unit_cost) t
+    ((Buy (Tank,h.position))::cd)
+  else cd
+
+(* Buy for AI. Check for own buildings not occupied by a unit, and buying
+ * whatever unit type it has the least of. Return cmd list *)
+let buy_ai (g : gamestate) =
+  let b_lst = my_buildings g g.building_list [] in
+  let my_units = get_units g.unit_list g.curr_player.player_name [] in
+  let (a,b,c) = sort_units my_units ([],[],[]) in
   let a' = List.length a in
   let b' = List.length b in
   let c' = List.length c in
-  let mini = List.sort compare (a'::b'::c') in
-  match List.nth 0 with
-  | a' ->
-  | b' ->
-  | c' ->
+  purchase (a',b',c') g.curr_player.money b_lst []
 
-(* Buy for AI. Check for own buildings not occupied by a unit, and buying
- * whatever unit type it has the least of *)
-let buy_ai (g : gamestate) =
-  let u = g.curr_player in
-  let b_lst = my_buildings g g.building_list [] in
-  let my_units = get_units g.unit_list g.curr_player [] in
-  let (a,b,c) = sort_units my_units ([],[],[]) in
-*)
+
 
 (* AI: returns unit_parameters that are active and have moves *)
 let rec out_of_moves (lst : unit_parameters list) (x : unit_parameters list) =
