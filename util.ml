@@ -238,6 +238,14 @@ let buy_ai (g : gamestate) =
   let (a,b,c) = sort_units my_units ([],[],[]) in
 *)
 
+(* AI: returns unit_parameters that are active and have moves *)
+let rec out_of_moves (lst : unit_parameters list) (x : unit_parameters list) =
+  match lst with
+  | [] -> x
+  | h::t ->
+    if (h.active)&&(h.curr_mvt > 0)
+    then out_of_moves t (h::x)
+    else out_of_moves t x
 
 
 

@@ -42,6 +42,9 @@ val move_rand : terrain array array -> int*int
 val move_towards_enemy_unit : unit_parameters -> unit_parameters list ->
   building_parameters list -> terrain array array -> int*int
 
+val out_of_moves : unit_parameters list -> unit_parameters list ->
+  unit_parameters list
+
 (*---------Commands from process command--------
 
 (** Given a unit *)
