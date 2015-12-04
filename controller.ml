@@ -205,20 +205,12 @@ let rec main (s:gamestate) =
   if end_game then () else main g
 
 
-(** Takes in an int representing a map (first thing asked for in REPL) and
- * sets ups a game *)
-let configure (i:int) : gamestate=
-  print_bytes("Loading map ");print_int(i);print_endline("");
-  match i with
-  | 1 -> Gamestates.state1
-  | 2 -> Gamestates.state2
-  | _->failwith "Go die in a hole"
-
-
   (** Starts the REPL *)
 let begin_game () =
-    let map_num = get_map_num ()
-    let main_state = configure map_num in
+    let map_num = get_map_num () in
+    let name1 = get_player_name 1 None in
+    let name2 = get_player_name 2 (Some name1) in
+    let main_state = configure map_num name1 name2 in
     let () = init(main_state) in
     main(main_state)
 

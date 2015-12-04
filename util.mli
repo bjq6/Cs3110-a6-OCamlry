@@ -53,6 +53,11 @@ val buy_ai : gamestate -> cmd list
 val out_of_moves : unit_parameters list -> unit_parameters list ->
   unit_parameters list
 
+val get_map_num : unit -> int
+
+val get_player_name : int -> bytes option -> bytes
+
+
 (*---------Commands from process command--------
 
 (** Given a unit *)

@@ -4,10 +4,6 @@ open Getcmd
 (** Starts the REPL *)
 val begin_game : unit -> unit
 
-(** Takes in an int representing a map (first thing asked for in REPL) and
- * sets ups a game *)
-val configure : int -> gamestate
-
 (** Loop/Repl - prompts user, process_command, update gamestate, call main again *)
 val main : gamestate -> unit
 

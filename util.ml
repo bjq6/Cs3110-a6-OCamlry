@@ -267,8 +267,6 @@ let buy_ai (g : gamestate) =
   let c' = List.length c in
   purchase (a',b',c') g.curr_player.money b_lst []
 
-
-
 (* AI: returns unit_parameters that are active and have moves *)
 let rec out_of_moves (lst : unit_parameters list) (x : unit_parameters list) =
   match lst with
@@ -290,6 +288,18 @@ let rec get_map_num () : int =
     let _ = print_endline("That is not a valid map. Please choose a number") in
     get_map_num ()
 
+let rec get_player_name (i:int) (other_name) : bytes =
+  let _ = print_bytes("What is the name of player ");print_int(i);
+          print_endline("?") in
+  let str = read_line () in
+  let possible_name = String.trim(str) in
+  match possible_name,other_name with
+  | name1,Some name2 ->
+      if (name1 = name2) then
+      let _ = print_endline("The player's names can not be the same. Try again") in
+      get_player_name i other_name
+      else name1
+  | name1, None -> name1
 
 
 

@@ -1,31 +1,35 @@
 open Util
 open Types
 
-let p1_name = Player1 "Dog"
-let p2_name = Player2 "Matt"
+(** Takes in an int representing a map (first thing asked for in REPL) and
+ * sets ups a game *)
+let configure (i:int) (name1:bytes) (name2:bytes) : gamestate=
 
-let p1_building = create_building p1_name 1 1
-let p2_building = create_building p2_name 8 8
+let p1_name = (Player1 name1) in
+let p2_name = (Player2 name2) in
 
-let p1_inf = create_unit p1_name 0 0 (Infantry)
-let p1_tank = create_unit p1_name 1 0 (Tank)
-let p1_caml = create_unit p1_name 1 1 (Ocamlry)
+let p1_building = create_building p1_name 1 1 in
+let p2_building = create_building p2_name 8 8 in
 
-let p2_inf = create_unit p2_name 9 9 (Infantry)
-let p2_tank = create_unit p2_name 9 8 (Tank)
-let p2_caml = create_unit p2_name 9 7 (Ocamlry)
+let p1_inf = create_unit p1_name 0 0 (Infantry) in
+let p1_tank = create_unit p1_name 1 0 (Tank) in
+let p1_caml = create_unit p1_name 1 1 (Ocamlry) in
+
+let p2_inf = create_unit p2_name 9 9 (Infantry) in
+let p2_tank = create_unit p2_name 9 8 (Tank) in
+let p2_caml = create_unit p2_name 9 7 (Ocamlry) in
 
 let p1 = {
       player_name = p1_name;
       money= 1000;
       score = 0
-      }
+      } in
 
 let p2 = {
       player_name = p2_name;
       money= 1000;
       score = 0
-      }
+      } in
 
 let state1 = {
   map = [|[|Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain|];
@@ -45,10 +49,10 @@ let state1 = {
   building_list = [p1_building; p2_building];
   game_over = false;
   turn = 0;
-}
+} in
 
-let s2_p1_caml = create_unit p1_name 1 1 (Ocamlry)
-let s2_p2_inf = create_unit p2_name 2 1 (Infantry)
+let s2_p1_caml = create_unit p1_name 1 1 (Ocamlry) in
+let s2_p2_inf = create_unit p2_name 2 1 (Infantry) in
 
 let state2 = {
   map = [|[|Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain|];
@@ -68,4 +72,10 @@ let state2 = {
   building_list = [p1_building; p2_building];
   game_over = false;
   turn = 0;
-}
+} in
+
+  print_bytes("Loading map ");print_int(i);print_endline("");
+  match i with
+  | 1 -> state1
+  | 2 -> state2
+  | _->failwith "Go die in a hole"
