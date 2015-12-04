@@ -29,6 +29,9 @@ val sort_units : unit_parameters list -> (unit_parameters list *
 
 val map_check : int*int -> terrain array array -> bool
 
+val enemy_check : unit_parameters -> unit_parameters list ->
+  unit_parameters list -> unit_parameters list
+
 (*---------Commands from process command--------
 
 (** Given a unit *)
