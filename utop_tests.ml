@@ -125,3 +125,23 @@ let priority_kill health_list : float list =
     | [] -> []
   in
   kill_help health_list
+
+let kill_mine mine enemy : bool =
+  match (sim_battle mine enemy) with
+  | (0,_) -> true
+  | _ -> false
+
+let kill_theirs mine enemy : bool =
+  match (sim_battle mine enemy) with
+  | (_,0) -> true
+  | _ -> false
+
+let favorable_trade (mine:unit_parameters) (enemy:unit_parameters) : bool =
+  let me_health = mine.curr_hp in
+  let enem_health = enemy.curr_hp in
+  let (new_me,new_them) = sim_battle mine enemy in
+    let percen =
+      try (float_of_int(enem_health - new_them)/.float_of_int(me_health - new_me))
+      with Failure "Division_by_zero" -> max_float
+    in
+      if percen>1. then true else false
