@@ -37,6 +37,11 @@ val building_check : unit_parameters -> building_parameters list ->
 
 val next_to : unit_parameters -> unit_parameters -> gamestate -> loc option
 
+val move_rand : terrain array array -> int*int
+
+val move_to_target : unit_parameters -> unit_parameters list ->
+  building_parameters list -> terrain array array -> int*int
+
 (*---------Commands from process command--------
 
 (** Given a unit *)
