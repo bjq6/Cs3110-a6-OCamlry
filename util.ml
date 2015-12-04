@@ -122,9 +122,10 @@ let rec enemy_check (a : unit_parameters) (lst : unit_parameters list)
     then enemy_check a t (h::targets)
     else enemy_check a t targets
 
-(*AI: check for nearby neutral or enemy buildings given gamestate building lst*)
+(* AI: check for nearby unoccupied neutral or enemy buildings given gamestate
+ * building lst*)
 let rec building_check (a : unit_parameters) (lst : building_parameters list)
-  (targets : building_parameters list) =
+  (targets : building_parameters list) (g_list : unit_parameters list) =
 
   match lst with
   | [] -> targets
@@ -132,8 +133,9 @@ let rec building_check (a : unit_parameters) (lst : building_parameters list)
     let (x1,y1) = a.position in
     let (x2,y2) = h.position in
     if (((abs x1-x2) + (abs y1-y2)) <= a.curr_mvt) && (h.owner <> a.plyr)
-    then building_check a t (h::targets)
-    else building_check a t targets
+      && (unit_at_loc g_list (x2,y2) = None)
+    then building_check a t (h::targets) g_list
+    else building_check a t targets g_list
 
 (*return loc that would move unit next to enemy unit, also checks for water*)
 let next_to (a : unit_parameters) (enemy : unit_parameters) (g : gamestate) =
@@ -159,37 +161,54 @@ let next_to (a : unit_parameters) (enemy : unit_parameters) (g : gamestate) =
       then Some (x2,y2-1)
     else None
 
+(*generates random spot on map to move to bc why not*)
+let move_rand (m : terrain array array) =
+  let y = (Array.length m) in
+  let x = (Array.length (Array.get m 0)) in
+  (Random.int x, Random.int y)
+
+
+
+(* AI: if attacking/moving to target in range not viable, provide location for
+ * infantry to move to nearest capturable building and tank/ocamlry to move to
+ * nearest enemy. lst is already a pre-filtered list of enemies*)
+let move_to_target (u : unit_parameters) (lst : unit_parameters list)
+  (b_lst : building_parameters list) (m : terrain array array) : loc =
+  match u.typ with
+  | Infantry ->
+    let targets = List.filter (fun x -> (x.owner <> u.plyr)) b_lst in
+    begin
+    match targets with
+    | [] -> move_rand m
+    | h::t ->
+    let (x1,y1) = u.position in
+    let distance a b =
+      let (x2,y2) = a.position in
+      let (x3,y3) = b.position in
+      if (abs(x1-x2) + abs(y1-y2)) < (abs(x1-x3) + abs(y1-y3))
+      then a else b in
+    let go = List.fold_left distance h targets in
+    go.position;
+    end
+
+  | _ ->
+    begin
+    match lst with
+    | [] -> move_rand m
+    | hd::tl ->
+    let (x1,y1) = u.position in
+    let distance' (a : unit_parameters) (b : unit_parameters) : unit_parameters =
+      let (x2,y2) = a.position in
+      let (x3,y3) = b.position in
+      if ((abs(x1-x2) + abs(y1-y2)) < (abs(x1-x3) + abs(y1-y3)))
+      then a else b
+    in
+    let g = List.fold_left distance' hd lst in
+    g.position;
+    end
 
 
 
 
 
 
-
-
-
-(*---------Commands from process command--------
-
-(** Given a unit *)
-let process_movement ((x1,y1),(x2,y2)) = failwith "unimplemented"
-
-(** Given first a unit and then the unit it is attacking, it returns the
-  gamestate with the proper damage and deaths made*)
-let process_attack ((x1,y1),(x2,y2)) = failwith "unimplemented"
-
-(** Purchases a unit of type unit_type for the current player and places it at
-  loc provided that there is a building there that doesn't already have a unit
-  on it and the current player has the proper resources to purchase the unit*)
-let process_buy ((x1,y1),u) = failwith "unimplemented"
-
-(** Ends the turn, reactivates units, updates monies and turns over control*)
-let process_end_turn () = failwith "unimplemented"
-
-(** Ends the game *)
-let process_surrender () = failwith "unimplemented"
-
-(** Sends the game in a full loop and makes the player try re-entering the
-  * command *)
-let process_invalid () = failwith "unimplemented"
-
----------------------------------------------*)
