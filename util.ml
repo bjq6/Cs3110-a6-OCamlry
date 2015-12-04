@@ -111,7 +111,7 @@ let map_check ((a,b) : int*int) (m : terrain array array) =
 
 (*AI: check for nearby enemies given a list of enemies (lst)*)
 let rec enemy_check (a : unit_parameters) (lst : unit_parameters list)
-  (targets : unit_parameters list) =
+  (targets : unit_parameters list) : unit_parameters list =
 
   match lst with
   | [] -> targets
@@ -172,7 +172,7 @@ let move_rand (m : terrain array array) =
 (* AI: if attacking/moving to target in range not viable, provide location for
  * infantry to move to nearest capturable building and tank/ocamlry to move to
  * nearest enemy. lst is already a pre-filtered list of enemies*)
-let move_to_target (u : unit_parameters) (lst : unit_parameters list)
+let move_towards_enemy_unit (u : unit_parameters) (lst : unit_parameters list)
   (b_lst : building_parameters list) (m : terrain array array) : loc =
   match u.typ with
   | Infantry ->

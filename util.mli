@@ -39,7 +39,7 @@ val next_to : unit_parameters -> unit_parameters -> gamestate -> loc option
 
 val move_rand : terrain array array -> int*int
 
-val move_to_target : unit_parameters -> unit_parameters list ->
+val move_towards_enemy_unit : unit_parameters -> unit_parameters list ->
   building_parameters list -> terrain array array -> int*int
 
 (*---------Commands from process command--------

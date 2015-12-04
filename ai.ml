@@ -2,9 +2,12 @@ open Types
 open Util
 open Battle
 
+(*Creates a list of health pairs, for a simulated battle with all of the units
+in a given enemy list and your unit*)
 let sim_all this_unit enemy_units : (int*int) list =
   List.map (sim_battle this_unit) enemy_units
 
+(*Makes a list of priorities, how favorable an attack on a list of units is*)
 let priority_kill health_list : float list =
   let rec kill_help l =
     match l with
@@ -18,16 +21,21 @@ let priority_kill health_list : float list =
   in
   kill_help health_list
 
+(*Returns a bool whether your unit would die in a battle with enemy unit*)
 let kill_mine mine enemy : bool =
   match (sim_battle mine enemy) with
   | (0,_) -> true
   | _ -> false
 
+(*Returns a bool whether your unit could kill the enemy unit*)
 let kill_theirs mine enemy : bool =
   match (sim_battle mine enemy) with
   | (_,0) -> true
   | _ -> false
 
+(*Given one of your units and an enemy unit, it returns a bool:
+True if he will lose more damage than you
+False if you will lose more damage than it*)
 let favorable_trade (mine:unit_parameters) (enemy:unit_parameters) : bool =
   let me_health = mine.curr_hp in
   let enem_health = enemy.curr_hp in
@@ -38,13 +46,27 @@ let favorable_trade (mine:unit_parameters) (enemy:unit_parameters) : bool =
     in
       if percen>1. then true else false
 
-let top_kill this_unit enemy_units : loc option =
-  match enemy_units with
+(*Given your unit and a list of enemy units, it returns a location option
+Some loc - if there is a unit in range that is worth attacking
+None - if there are no units in range worth attacking*)
+let top_kill this_unit enemy_units g : loc option =
+  (*Are there enemies in range*)
+  let in_range = enemy_check this_unit enemy_units [] in
+  match in_range with
   | [] -> None
   | enems ->
       let killable = List.filter (kill_theirs this_unit) enems in
-      match killable with
-      | h::t -> []
+      let rec killable_helper kill_list=
+        match kill_list with
+        | h::t ->
+          begin
+            match (next_to this_unit h g)  with
+            | Some m -> Some m
+            | None -> killable_helper t
+          end
+        | [] -> None
+      in
+      killable_helper killable
 
 
 (*
