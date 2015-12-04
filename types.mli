@@ -1,4 +1,4 @@
-open Async.Std
+
 
 (* A place on the map matrix *)
 type loc = int * int
