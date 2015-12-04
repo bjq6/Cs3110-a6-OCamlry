@@ -44,4 +44,28 @@ let state1 = {
   unit_list = [p1_inf; p1_tank; p1_caml; p2_inf; p2_tank; p2_caml];
   building_list = [p1_building; p2_building];
   game_over = false;
+  turn = 0;
+}
+
+let s2_p1_caml = create_unit p1_name 1 1 (Ocamlry)
+let s2_p2_inf = create_unit p2_name 2 1 (Infantry)
+
+let state2 = {
+  map = [|[|Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain|];
+          [|Plain; Building (Some p1_name); Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain|];
+          [|Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain|];
+          [|Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain|];
+          [|Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain|];
+          [|Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain|];
+          [|Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain|];
+          [|Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain|];
+          [|Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain; Building (Some p2_name); Plain|];
+          [|Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain|]
+          |];
+  curr_player = p1;
+  player_state = [p1; p2];
+  unit_list = [s2_p1_caml;s2_p2_inf];
+  building_list = [p1_building; p2_building];
+  game_over = false;
+  turn = 0;
 }

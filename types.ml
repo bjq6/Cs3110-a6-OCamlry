@@ -57,7 +57,8 @@ type gamestate = {
   player_state : player list;  (* all the players in the game *)
   mutable unit_list : unit_parameters list;  (* all the units in the game *)
   mutable building_list : building_parameters list;  (* all the buildings in game *)
-  mutable game_over : bool
+  mutable game_over : bool;
+  mutable turn : int;
 }
 
 type cmd =

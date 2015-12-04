@@ -207,6 +207,40 @@ let move_towards_enemy_unit (u : unit_parameters) (lst : unit_parameters list)
     g.position;
     end
 
+(* return list of current player's buildings that are unoccupied.
+ * initialize b as empty list )
+let rec my_buildings (g : gamestate) (lst : building_parameters list)
+  (b : building_parameters list) =
+  match lst with
+  | [] -> b
+  | h::t ->
+    if (h.owner = g.curr_player) && (unit_at_loc g.unit_list h.position <> None)
+    then my_buildings g t h::b else my_buildings g t b
+
+( helper function for buy_ai )
+let rec purchase (a,b,c) money (b_lst : building_parameters list)
+  (cd : cmd list)=
+  let a' = List.length a in
+  let b' = List.length b in
+  let c' = List.length c in
+  let mini = List.sort compare (a'::b'::c') in
+  match List.nth 0 with
+  | a' ->
+  | b' ->
+  | c' ->
+
+(* Buy for AI. Check for own buildings not occupied by a unit, and buying
+ * whatever unit type it has the least of *)
+let buy_ai (g : gamestate) =
+  let u = g.curr_player in
+  let b_lst = my_buildings g g.building_list [] in
+  let my_units = get_units g.unit_list g.curr_player [] in
+  let (a,b,c) = sort_units my_units ([],[],[]) in
+*)
+
+
+
+
 
 
 

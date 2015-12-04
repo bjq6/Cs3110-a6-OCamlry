@@ -14,7 +14,9 @@ let process_command (c:cmd) (g:gamestate) : gamestate =
   | Invalid s -> Printf.printf "Invalid command %s\n" s; g
   | Surrender ->
     (*surrender protocol:Clarkson Wins Exit 0 *)
-    print_endline "Clarkson wins"; exit 0
+    print_endline "You Have Surrendered: Thank you for playing\n";
+    g.game_over<-true
+    g
   | EndTurn ->
     (*modify gamestate to change player*)
       g.curr_player <- next_player g;
@@ -22,6 +24,7 @@ let process_command (c:cmd) (g:gamestate) : gamestate =
       let num = num_building g.building_list g.curr_player.player_name 0 in
       g.curr_player.money <- g.curr_player.money + (num*100);
     (*refresh all unit(have refresh func in util); return g*)
+      g.turn<-g.turn + 1;
       refresh g.unit_list; g
 
   | Move ((x1,y1),(x2,y2)) ->
@@ -97,7 +100,10 @@ let process_command (c:cmd) (g:gamestate) : gamestate =
     (*update gamestate with updated units*)
            g.unit_list <- new_unit_list;
            g.curr_player.score <- g.curr_player.score + i;
-
+           let my_un = List.length (get_units new_unit_list g.curr_player.player_name []) in
+           let en_un = List.length (get_units new_unit_list (next_player g).player_name []) in
+           let () = Printf.printf "I have %d units:He has %d units\n" my_un en_un in
+           g.game_over <-(my_un=0) ||(en_un=0);
     (*return new gamestate*)
     g
     end
@@ -193,6 +199,7 @@ let rec main (s:gamestate) =
   let g = process_command cmd s in
   let end_game = g.game_over  in (*Need to add something to type to see if game has ended*)
   (*update view*)
+  let () = Printf.printf "Turn %d\n" g.turn in
   let () = update_state g in
   (*froot loop it and return unit. actual unit not matt unit*)
   if end_game then () else main g
@@ -202,11 +209,15 @@ let rec main (s:gamestate) =
  * sets ups a game *)
 let configure (i:int) : gamestate=
   print_bytes("Loading map ");print_int(i);print_endline("");
-  Gamestates.state1
+  match i with
+  | 1 -> Gamestates.state1
+  | 2 -> Gamestates.state2
+  | _->failwith "Go die in a hole"
+
 
   (** Starts the REPL *)
 let begin_game () =
-    let main_state = configure 1 in
+    let main_state = configure 2 in
     let () = init(main_state) in
     main(main_state)
 
