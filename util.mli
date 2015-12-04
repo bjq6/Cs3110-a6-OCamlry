@@ -35,6 +35,8 @@ val enemy_check : unit_parameters -> unit_parameters list ->
 val building_check : unit_parameters -> building_parameters list ->
   building_parameters list -> building_parameters list
 
+val next_to : unit_parameters -> unit_parameters -> gamestate -> loc option
+
 (*---------Commands from process command--------
 
 (** Given a unit *)
