@@ -14,8 +14,6 @@ let rec b_at_loc (lst : building_parameters list) (x : loc) =
   | [] -> None
   | h::t -> if h.position = x then Some h else b_at_loc t x
 
-
-
 (*next player given two players defined *)
 let next_player (g: gamestate) =
   match g.curr_player.player_name with
@@ -247,6 +245,17 @@ let rec out_of_moves (lst : unit_parameters list) (x : unit_parameters list) =
     then out_of_moves t (h::x)
     else out_of_moves t x
 
+let rec get_map_num () : int =
+  let _ = print_endline("Which map would you like to play?") in
+  let _ = print_endline("1 - Plains\n2 - Test") in
+  let str = read_line () in
+  let words = String.trim(str) in
+  match words with
+  | "1" -> 1
+  | "2" -> 2
+  | _ ->
+    let _ = print_endline("That is not a valid map. Please choose a number") in
+    get_map_num ()
 
 
 

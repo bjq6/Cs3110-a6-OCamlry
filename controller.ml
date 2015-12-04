@@ -15,7 +15,7 @@ let process_command (c:cmd) (g:gamestate) : gamestate =
   | Surrender ->
     (*surrender protocol:Clarkson Wins Exit 0 *)
     print_endline "You Have Surrendered: Thank you for playing\n";
-    g.game_over<-true
+    g.game_over<-true;
     g
   | EndTurn ->
     (*modify gamestate to change player*)
@@ -217,7 +217,8 @@ let configure (i:int) : gamestate=
 
   (** Starts the REPL *)
 let begin_game () =
-    let main_state = configure 2 in
+    let map_num = get_map_num ()
+    let main_state = configure map_num in
     let () = init(main_state) in
     main(main_state)
 

@@ -137,11 +137,10 @@ For example, that could mean moving to a place and then attack, or moving then
 capturing, just moving, or ending the turn. Therefore cmd list will always
 have at least one command in it, but at most two commands. *)
 
-(*
-
 let start_ai (g:gamestate) : cmd list =
 
-  let my_units = get_units g.unit_list g.curr_player [] in
+  let my_guys = get_units g.unit_list g.curr_player [] in
+  let my_units = out_of_moves my_guys [] in
   let (my_inf,my_camls,my_tanks) = sort_units my_units ([],[],[]) in
 
   let enemy_units = get_units g.unit_list (next_player g) [] in
@@ -157,4 +156,3 @@ let start_ai (g:gamestate) : cmd list =
   *)
   | _ -> [Surrender]
 
-*)
