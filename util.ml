@@ -280,6 +280,16 @@ let rec out_of_moves (lst : unit_parameters list) (x : unit_parameters list) =
     then out_of_moves t (h::x)
     else out_of_moves t x
 
+(*asks if user wants to play against an AI, returns true if yes*)
+let rec play_ai () =
+  Printf.printf "Would you like to play against an AI? y/n\n";
+  let str = read_line () in
+  match str with
+  |"y" |"Y" | "yes" | "Yes" -> true
+  |"n" |"N" | "no" | "No" -> false
+  | _ -> Printf.printf "Invalid command"; play_ai ()
+
+
 
 
 
