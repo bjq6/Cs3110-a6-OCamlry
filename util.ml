@@ -301,6 +301,16 @@ let rec get_player_name (i:int) (other_name) : bytes =
       else name1
   | name1, None -> name1
 
+(*asks if user wants to play against an AI, returns true if yes*)
+let rec play_ai () =
+  Printf.printf "Would you like to play against an AI? y/n\n";
+  let str = read_line () in
+  match str with
+  |"y" |"Y" | "yes" | "Yes" -> true
+  |"n" |"N" | "no" | "No" -> false
+  | _ -> Printf.printf "Invalid command"; play_ai ()
+
+
 
 
 
