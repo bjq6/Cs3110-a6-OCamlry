@@ -122,6 +122,19 @@ let rec enemy_check (a : unit_parameters) (lst : unit_parameters list)
     then enemy_check a t (h::targets)
     else enemy_check a t targets
 
+(*AI: check for nearby neutral or enemy buildings given gamestate building lst*)
+let rec building_check (a : unit_parameters) (lst : building_parameters list)
+  (targets : building_parameters list) =
+
+  match lst with
+  | [] -> targets
+  | h::t ->
+    let (x1,y1) = a.position in
+    let (x2,y2) = h.position in
+    if (((abs x1-x2) + (abs y1-y2)) <= a.curr_mvt) && (h.owner <> a.plyr)
+    then building_check a t (h::targets)
+    else building_check a t targets
+
 
 
 
