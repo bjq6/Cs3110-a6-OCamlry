@@ -38,7 +38,7 @@ let attack_sim (attacker:unit_parameters) (defender:unit_parameters)=
   let att_hlt = float_of_int(attacker.curr_hp)/.float_of_int (att_max) in
   let hlt_left = 1. -. (att_hlt *. def_dmg) in
   let new_hlt = float_of_int(defender.curr_hp)*.hlt_left in
-  defender.curr_hp <- max (int_of_float new_hlt) 0
+  max (int_of_float new_hlt) 0
 
 let capture (player:player_id)(building:building_parameters)
               (bldlst:building_parameters list) =
@@ -49,13 +49,15 @@ let capture (player:player_id)(building:building_parameters)
            |_->building.curr_hp<-1 )in
   building::lst
 let sim_battle (attacker:unit_parameters)(defender:unit_parameters):(int*int) =
-  let () = attack_sim attacker defender in
-  if defender.curr_hp = 0
+  let def_hlt = attack_sim attacker defender in
+  if def_hlt= 0
   then
     (attacker.curr_hp,0)
   else
-    let () = attack_sim defender attacker in
-    (attacker.curr_hp,defender.curr_hp)
+    let d1 = defender in
+    let () = d1.curr_hp <- def_hlt in
+    let att_hlt = attack_sim d1 attacker in
+    (att_hlt,def_hlt)
 let battle (attacker:unit_parameters)(defender:unit_parameters)
               (unit_list:unit_parameters list):(int*unit_parameters list) =
   let lst = remove attacker (remove defender unit_list) in
