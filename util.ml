@@ -109,6 +109,20 @@ let map_check ((a,b) : int*int) (m : terrain array array) =
   let x = (Array.length (Array.get m 0)) in
   (a >= 0) && (a < x) && (b >= 0) && (b < y)
 
+(*AI: check for nearby enemies given a list of enemies (lst)*)
+let rec enemy_check (a : unit_parameters) (lst : unit_parameters list)
+  (targets : unit_parameters list) =
+
+  match lst with
+  | [] -> targets
+  | h::t ->
+    let (x1,y1) = a.position in
+    let (x2,y2) = h.position in
+    if ((abs x1-x2) + (abs y1-y2)) <= a.curr_mvt + 1
+    then enemy_check a t (h::targets)
+    else enemy_check a t targets
+
+
 
 
 
