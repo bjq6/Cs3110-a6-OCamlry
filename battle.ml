@@ -1,6 +1,8 @@
 open Types
 open Random
 open Util
+
+
 let battle_generic (attacker:unit_type)(defender:unit_type):float =
   match (attacker,defender) with
   |(Infantry,Infantry)->0.75
@@ -12,15 +14,19 @@ let battle_generic (attacker:unit_type)(defender:unit_type):float =
   |(Tank,Infantry)    ->0.65
   |(Tank,Ocamlry)     ->0.65
   |(Tank,Tank)        ->0.75
+
 let rand_percent max =
   let x = Random.int (max*2+1) in
   (float_of_int (x-max))/.100.
+
 let max x y =
   if x>y then x else y
+
 let rec remove x lst =
   match lst with
   |[]->[]
   |h::t->if (x=h) then t else h::remove x t
+
 let attack (attacker:unit_parameters) (defender:unit_parameters)=
   let att_type = attacker.typ in
   let def_type = defender.typ in
@@ -30,6 +36,7 @@ let attack (attacker:unit_parameters) (defender:unit_parameters)=
   let hlt_left = 1. -. (att_hlt *. def_dmg) in
   let new_hlt = float_of_int(defender.curr_hp)*.hlt_left in
   defender.curr_hp <- max (int_of_float new_hlt) 0
+
 let attack_sim (attacker:unit_parameters) (defender:unit_parameters)=
   let att_type = attacker.typ in
   let def_type = defender.typ in
@@ -48,6 +55,7 @@ let capture (player:player_id)(building:building_parameters)
                       building.owner<-player
            |_->building.curr_hp<-1 )in
   building::lst
+
 let sim_battle (attacker:unit_parameters)(defender:unit_parameters):(int*int) =
   let def_hlt = attack_sim attacker defender in
   if def_hlt= 0
@@ -58,6 +66,7 @@ let sim_battle (attacker:unit_parameters)(defender:unit_parameters):(int*int) =
     let () = d1.curr_hp <- def_hlt in
     let att_hlt = attack_sim d1 attacker in
     (att_hlt,def_hlt)
+
 let battle (attacker:unit_parameters)(defender:unit_parameters)
               (unit_list:unit_parameters list):(int*unit_parameters list) =
   let lst = remove attacker (remove defender unit_list) in

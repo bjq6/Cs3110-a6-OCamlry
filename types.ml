@@ -1,9 +1,8 @@
-open Async.Std
+
 
 (* A place on the map matrix *)
 type loc = int * int
 type player_id = Player1 of string | Player2 of string
-type specific_unit_id = int
 
 (* A given player *)
 type player = {
@@ -24,13 +23,11 @@ type base_unit = {
   attack_range : int;   (* The max distance the unit can attack from*)
 }
 
-
-
 (* An individual unit of unit_type with unique unit_id *)
 type unit_parameters = {
   typ : unit_type;        (* Type of unit *)
   plyr : player_id;          (* Player who owns the given unit *)
-  unit_id : specific_unit_id;(* Unique ID that reperesents this single unit*)
+  unit_id : int;           (* Unique ID that reperesents this single unit*)
   mutable active : bool;   (* Reflects whether the unit acted on the given turn *)
   mutable curr_hp : int;  (* Reflects the current health of the unit*)
   mutable curr_mvt : int; (* Reflects how many more moves the unit has this turn*)
@@ -45,10 +42,8 @@ type building_parameters = {
   mutable position : loc;     (* A location where the building is on a map *)
 }
 
-
 (* What each tile/location on the map can be *)
 type terrain = Plain | Water | Building of player_id option
-
 
 (* Total Gamestate *)
 type gamestate = {

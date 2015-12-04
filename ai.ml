@@ -49,24 +49,40 @@ let favorable_trade (mine:unit_parameters) (enemy:unit_parameters) : bool =
 (*Given your unit and a list of enemy units, it returns a location option
 Some loc - if there is a unit in range that is worth attacking
 None - if there are no units in range worth attacking*)
-let top_kill this_unit enemy_units g : loc option =
+let top_kill this_unit enemy_units g : (loc * loc) option =
   (*Are there enemies in range*)
   let in_range = enemy_check this_unit enemy_units [] in
   match in_range with
   | [] -> None
   | enems ->
+      (*Can I kill an enemy*)
       let killable = List.filter (kill_theirs this_unit) enems in
-      let rec killable_helper kill_list=
+      let rec attack_helper kill_list=
         match kill_list with
         | h::t ->
           begin
             match (next_to this_unit h g)  with
-            | Some m -> Some m
-            | None -> killable_helper t
+            | Some m -> Some (h.position,m)
+            | None -> attack_helper t
           end
-        | [] -> None
+        | [] ->
+          (*If not, is there at least a favorable trade?*)
+          let favorable = List.filter (favorable_trade this_unit) enems in
+          let rec favorable_helper maim_list=
+            begin
+            match maim_list with
+            | h::t ->
+              begin
+                match (next_to this_unit h g)  with
+                | Some m -> Some (h.position,m)
+                | None -> favorable_helper t
+              end
+            | [] -> None
+            end
+          in
+          favorable_helper favorable
       in
-      killable_helper killable
+      attack_helper killable
 
 
 (*
@@ -77,29 +93,35 @@ let who_to_attack this_unit enemy_units : unit_parameters =
   | Ocamlry ->
   | Tank ->
 *)
-(*
-let inf_turn this_inf enemy_inf enemy_camls enemy_tanks g : cmd list =
 
-  let my_pos = this_inf.positon in
+let inf_turn (this_inf:unit_parameters) enemies g : cmd list =
+
+  let my_pos = this_inf.position in
+  let backup_step =
+  (move_towards_enemy_unit this_inf enemies g.building_list g.map) in
 
   (*Currently capturing a building?*)
+  begin
   match (b_at_loc g.building_list my_pos) with
   | Some b ->
-      if not (g.curr_player.player_name = b.owner) then [Capture my_pos]
+      if (not(g.curr_player.player_name = b.owner)) then [Capture my_pos]
+      else [Move (my_pos,backup_step)]
   | None ->
     (*Can I capture a building*)
     let near_buildings = building_check this_inf g.building_list [] g.unit_list in
+    begin
     match near_buildings with
-    | h::_ -> [Move h.positon; Capture h.positon]
+    | h::_ -> [Move (this_inf.position,h.position); Capture h.position]
     | [] ->
-      (*Are enemies in range?*)
-      let near_enemies = enemy_check this_inf
-        enemy_inf@enemy_camls@enemy_tanks [] in
-      match near_enemies with
-      |
-      |
-        (*Can I kill it?*)
-*)
+      begin
+      match (top_kill this_inf enemies g) with
+      | Some (me,them) -> [Move (my_pos,me); Attack (me,them)]
+      | None -> [Move (my_pos,backup_step)]
+      end
+    end
+  end
+
+
 (*
 let caml_turn this_inf enemy_inf enemy_camls enemy_tanks g : cmd list =
       failwith "unimplemented"
