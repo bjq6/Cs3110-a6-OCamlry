@@ -42,6 +42,14 @@ val move_rand : terrain array array -> int*int
 val move_towards_enemy_unit : unit_parameters -> unit_parameters list ->
   building_parameters list -> terrain array array -> int*int
 
+val my_buildings : gamestate -> building_parameters list ->
+  building_parameters list -> building_parameters list
+
+val purchase : int*int*int -> int -> building_parameters list -> cmd list ->
+  cmd list
+
+val buy_ai : gamestate -> cmd list
+
 val out_of_moves : unit_parameters list -> unit_parameters list ->
   unit_parameters list
 
