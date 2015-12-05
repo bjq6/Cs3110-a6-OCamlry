@@ -62,7 +62,11 @@ let sim_battle (attacker:unit_parameters)(defender:unit_parameters):(int*int) =
   then
     (attacker.curr_hp,0)
   else
-    let d1 = defender in
+    let d1 = {
+  typ = defender.typ; plyr = defender.plyr; unit_id = defender.unit_id;
+  active = defender.active; curr_hp = def_hlt; curr_mvt = defender.curr_mvt;
+  position = defender.position} in
+
     let () = d1.curr_hp <- def_hlt in
     let att_hlt = attack_sim d1 attacker in
     (att_hlt,def_hlt)
