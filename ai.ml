@@ -64,9 +64,7 @@ let top_kill this_unit enemy_units g : (loc * loc) option =
           begin
             match (next_to this_unit h g)  with
             | Some m ->
-              let _ = print_endline("here1") in
-              let (x,y) = m in
-              let _ = Printf.printf "moving to (%d,%d)\n" x y in
+              (*let (x,y) = m in*)
               Some (m,h.position)
             | None -> attack_helper t
           end
@@ -80,7 +78,6 @@ let top_kill this_unit enemy_units g : (loc * loc) option =
               begin
                 match (next_to this_unit h g)  with
                 | Some m ->
-                  let _ = print_endline("here2") in
                   Some (m,h.position)
                 | None -> favorable_helper t
               end
@@ -90,6 +87,16 @@ let top_kill this_unit enemy_units g : (loc * loc) option =
           favorable_helper favorable
       in
       attack_helper killable
+
+let top_kill_2 this_unit enemy_units g : (loc * loc) option =
+  let in_range = enemy_check this_unit enemy_units [] in
+  if in_range = [] then None else
+    let h = (List.hd in_range) in
+      match (next_to this_unit h g) with
+      | None -> None
+      | Some l -> Some (l, h.position)
+
+
 
 
 (* Contains logic for the reactionary agent of an infantry:
@@ -144,11 +151,9 @@ let caml_turn (this_caml:unit_parameters) enemies g : cmd list =
   (next_close_enemy_unit this_caml enemies g.building_list g.map g.unit_list) in
   *)
 
-  let _ = print_endline("Caml going killing") in
-
-  let top_inf = (top_kill this_caml enemy_i g) in
-  let top_caml = (top_kill this_caml enemy_c g) in
-  let top_tank = (top_kill this_caml enemy_t g) in
+  let top_inf = (top_kill_2 this_caml enemy_i g) in
+  let top_caml = (top_kill_2 this_caml enemy_c g) in
+  let top_tank = (top_kill_2 this_caml enemy_t g) in
 
   match top_inf, top_caml, top_tank with
     (*Try to kill infantry first*)
@@ -179,12 +184,10 @@ let tank_turn (this_tank:unit_parameters) enemies g : cmd list =
   let backup_step =
   (next_close_enemy_unit this_caml enemies g.building_list g.map g.unit_list) in
   *)
-
-  let _ = print_endline("Tank going killing") in
-
-  let top_inf = (top_kill this_tank enemy_i g) in
-  let top_caml = (top_kill this_tank enemy_c g) in
-  let top_tank = (top_kill this_tank enemy_t g) in
+  let _ = Printf.printf "Inf = %d; Caml = %d; Tank = %d\n" (List.length enemy_i) (List.length enemy_c) (List.length enemy_t) in
+  let top_inf = (top_kill_2 this_tank enemy_i g) in
+  let top_caml = (top_kill_2 this_tank enemy_c g) in
+  let top_tank = (top_kill_2 this_tank enemy_t g) in
 
   match top_inf, top_caml, top_tank with
     (*Try to kill infantry first*)

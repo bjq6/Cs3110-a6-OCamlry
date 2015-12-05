@@ -75,7 +75,7 @@ let state2 = {
 } in
 
 let s3_p1_caml = create_unit p1_name 1 1 (Ocamlry) in
-let s3_p2_inf = create_unit p2_name 2 1 (Tank) in
+let s3_p2_tank = create_unit p2_name 2 1 (Tank) in
 
 let state3 = {
   map = [|[|Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain|];
@@ -91,7 +91,7 @@ let state3 = {
           |];
   curr_player = p1;
   player_state = [p1; p2];
-  unit_list = [s3_p1_caml;s3_p2_inf];
+  unit_list = [s3_p1_caml;s3_p2_tank];
   building_list = [p1_building; p2_building];
   game_over = false;
   turn = 0;
@@ -100,6 +100,8 @@ let state3 = {
   print_bytes("Loading map ");print_int(i);print_endline("");
   match i with
   | 1 -> state1
-  | 2 -> state2
-  | 3 -> state3
-  | _->failwith "Go die in a hole"
+  | 2 -> state1
+  | 3 -> state1
+  | 98 -> state2
+  | 99 -> state3
+  | _->failwith "Someone done goofed - fix get_map_num in util.ml"
