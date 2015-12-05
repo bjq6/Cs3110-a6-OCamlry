@@ -166,7 +166,7 @@ let rec move_rand (m : terrain array array) (lst : unit_parameters list) =
   let x = (Array.length (Array.get m 0)) in
   let (x',y') = (Random.int x, Random.int y) in
   match (unit_at_loc lst (x',y'), (m.(x').(y') <> Water)) with
-  | (None, true) -> Printf.printf "Random walking to (%d,%d)\n" x y; (x',y')
+  | (None, true) -> Printf.printf "Random walking to (%d,%d)\n" x' y'; (x',y')
   | (_,_) -> move_rand m lst
 
 
@@ -285,12 +285,13 @@ let rec out_of_moves (lst : unit_parameters list) (x : unit_parameters list) =
 (* Game Start : Asks the player what map they want to play - returns int*)
 let rec get_map_num () : int =
   let _ = print_endline("Which map would you like to play?") in
-  let _ = print_endline("1 - Plains\n2 - Test") in
+  let _ = print_endline("1 - Plains\n2 - Test\n3 - Tank Test") in
   let str = read_line () in
   let words = String.trim(str) in
   match words with
   | "1" -> 1
   | "2" -> 2
+  | "3" -> 3
   | _ ->
     let _ = print_endline("That is not a valid map. Please choose a number") in
     get_map_num ()

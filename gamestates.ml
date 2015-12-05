@@ -74,8 +74,32 @@ let state2 = {
   turn = 0;
 } in
 
+let s3_p1_caml = create_unit p1_name 1 1 (Ocamlry) in
+let s3_p2_inf = create_unit p2_name 2 1 (Tank) in
+
+let state3 = {
+  map = [|[|Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain|];
+          [|Plain; Building (Some p1_name); Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain|];
+          [|Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain|];
+          [|Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain|];
+          [|Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain|];
+          [|Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain|];
+          [|Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain|];
+          [|Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain|];
+          [|Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain; Building (Some p2_name); Plain|];
+          [|Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain|]
+          |];
+  curr_player = p1;
+  player_state = [p1; p2];
+  unit_list = [s3_p1_caml;s3_p2_inf];
+  building_list = [p1_building; p2_building];
+  game_over = false;
+  turn = 0;
+} in
+
   print_bytes("Loading map ");print_int(i);print_endline("");
   match i with
   | 1 -> state1
   | 2 -> state2
+  | 3 -> state3
   | _->failwith "Go die in a hole"
