@@ -142,20 +142,24 @@ let next_to (a : unit_parameters) (enemy : unit_parameters) (g : gamestate) =
     let (x2,y2) = enemy.position in
     if (((abs x1-x2) + (abs y1-y2)) > a.curr_mvt+1)
     then None
-    else if ((abs (x1-(x2+1))) + (abs (y1-y2)) <= a.curr_mvt) &&
-      (g.map.(x2+1).(y2) <> Water) && (map_check (x2+1,y2) g.map) &&
+    else if (map_check (x2+1,y2) g.map) &&
+      ((abs (x1-(x2+1))) + (abs (y1-y2)) <= a.curr_mvt) &&
+      (g.map.(x2+1).(y2) <> Water) &&
       (unit_at_loc g.unit_list (x2+1,y2) = None)
       then Some (x2+1,y2)
-    else if (((abs (x1-(x2-1))) + (abs (y1-y2))) <= a.curr_mvt) &&
-      (g.map.(x2-1).(y2) <> Water) && (map_check (x2-1,y2) g.map) &&
+    else if (map_check (x2-1,y2) g.map) &&
+      (((abs (x1-(x2-1))) + (abs (y1-y2))) <= a.curr_mvt) &&
+      (g.map.(x2-1).(y2) <> Water) &&
       (unit_at_loc g.unit_list (x2-1,y2) = None)
       then Some (x2-1,y2)
-    else if (((abs (x1-x2)) + (abs (y1-(y2+1))) <= a.curr_mvt) &&
-      (g.map.(x2).(y2+1) <> Water) && (map_check (x2,y2+1) g.map) &&
+    else if (map_check (x2,y2+1) g.map) &&
+      (((abs (x1-x2)) + (abs (y1-(y2+1))) <= a.curr_mvt) &&
+      (g.map.(x2).(y2+1) <> Water) &&
       (unit_at_loc g.unit_list (x2,y2+1) = None))
       then Some (x2,y2+1)
-    else if (((abs (x1-x2)) + (abs (y1-(y2-1))) <= a.curr_mvt) &&
-      (g.map.(x2).(y2-1) <> Water) && (map_check (x2,y2-1) g.map) &&
+    else if (map_check (x2,y2-1) g.map) &&
+      (((abs (x1-x2)) + (abs (y1-(y2-1))) <= a.curr_mvt) &&
+      (g.map.(x2).(y2-1) <> Water) &&
       (unit_at_loc g.unit_list (x2,y2-1) = None))
       then Some (x2,y2-1)
     else None
