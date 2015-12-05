@@ -176,10 +176,10 @@ let update_status_bar gamestate =
     populate_map updated_state;
     update_status_bar;
     previous_state := update_state)*)
-let game_over_camel = (Util.read_image 400 "./Graphics/game_over_camel_red.csv"
+let game_over_camel = (read_image 400 "./Graphics/game_over_camel_red.csv"
                                       "./Graphics/game_over_camel_blue.csv"
                                       "./Graphics/game_over_camel_green.csv")
-let game_over_text =  (Util.read_image 50  "./Graphics/game_over_text_red.csv"
+let game_over_text =  (read_image 50  "./Graphics/game_over_text_red.csv"
                                       "./Graphics/game_over_text_blue.csv"
                                       "./Graphics/game_over_text_green.csv")
 

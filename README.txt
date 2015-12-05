@@ -9,7 +9,8 @@ To compile Ocamlry run:
 To run and Play Ocamlry run:
   cs3110 run controller.ml
 
-This will open up a new Ocamlry window and you will be able to start playing
+This will open up a new Ocamlry window.  The terminal will prompt you for a 
+name and if you want to play against an AI.  After that,you will be able to start playing
 
 *****************************************************************************
 *************************Game Instructions **********************************

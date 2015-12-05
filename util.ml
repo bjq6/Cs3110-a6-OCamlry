@@ -296,6 +296,8 @@ let rec get_map_num () : int =
   | "1" -> 1
   | "2" -> 2
   | "3" -> 3
+  | "4" -> 4
+  | "5" -> 5
   | _ ->
     let _ = print_endline("That is not a valid map. Please choose a number") in
     get_map_num ()

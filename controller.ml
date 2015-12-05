@@ -56,7 +56,8 @@ let process_command (c:cmd) (g:gamestate) : gamestate =
       | Some z -> if (x1=x2)&&(y1=y2)
         then (print_endline "Your unit stays in place."; g)
         else (print_endline "Space currently occupied by unit"; g)
-      | None -> if ((g.map).(x2).(y2) = Water)
+      | None -> if ((g.map).(y2).(x2) = Water)(*VERY IMPORATNT THE INDECES IN 
+                                                THE ARRAY IS SWAPED*)
         then (print_endline "Can't move to water"; g)
         else
     (*check if unit can move that many spaces. use abs delta x + delta y*)
@@ -157,7 +158,7 @@ let process_command (c:cmd) (g:gamestate) : gamestate =
           g.building_list <- new_building_list;
 
     (*change building owner in map, update unit as inactive*)
-          ((g.map).(x).(y)) <- (Building (Some g.curr_player.player_name));
+          ((g.map).(y).(x)) <- (Building (Some g.curr_player.player_name));
           u.active <- false;
 
     (*return new gamestate*)
