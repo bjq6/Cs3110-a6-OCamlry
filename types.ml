@@ -39,7 +39,7 @@ type building_parameters = {
   max_hp : int;               (* Max health of a building *)
   mutable owner : player_id;  (* Player who owns it *)
   mutable curr_hp : int;      (* Current health of this building *)
-  mutable position : loc;     (* A location where the building is on a map *)
+  position : loc;     (* A location where the building is on a map *)
 }
 
 (* What each tile/location on the map can be *)

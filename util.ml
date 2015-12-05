@@ -132,8 +132,8 @@ let rec building_check (a : unit_parameters) (lst : building_parameters list)
     let (x2,y2) = h.position in
     if (((abs x1-x2) + (abs y1-y2)) <= a.curr_mvt) && (h.owner <> a.plyr)
       && (unit_at_loc g_list (x2,y2) = None)
-    then building_check a t (h::targets) g_list
-    else building_check a t targets g_list
+    then (building_check a t (h::targets) g_list)
+    else (building_check a t targets g_list)
 
 (*return loc that would move unit next to enemy unit, also checks for water*)
 let next_to (a : unit_parameters) (enemy : unit_parameters) (g : gamestate) =

@@ -50,8 +50,9 @@ let process_command (c:cmd) (g:gamestate) : gamestate =
     (*check y to see if space available and is plain or building*)
 
       match (unit_at_loc g.unit_list (x2,y2)) with
-      | Some z -> print_int x2; print_int y2;
-        print_endline "Space currently occupied by unit"; g
+      | Some z -> if (x1=x2)&&(y1=y2)
+        then (print_endline "Your unit stays in place."; g)
+        else (print_endline "Space currently occupied by unit"; g)
       | None -> if ((g.map).(x2).(y2) = Water)
         then (print_endline "Can't move to water"; g)
         else
