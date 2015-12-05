@@ -105,9 +105,11 @@ let top_kill_2 this_unit enemy_units g : (loc * loc) option =
 let inf_turn (this_inf:unit_parameters) enemies g : cmd list =
 
   let my_pos = this_inf.position in
-  let loc_to_go =
-  (next_close_enemy_unit this_inf enemies g.building_list g.map g.unit_list) in
-  let backup_step = move_it this_inf loc_to_go g.map g.unit_list in
+
+  let backup_step =
+    let loc_to_go =
+   (next_close_enemy_unit this_inf enemies g.building_list g.map g.unit_list) in
+  move_it this_inf loc_to_go g.map g.unit_list in
 
   (*Currently capturing a building?*)
   begin
@@ -125,7 +127,7 @@ let inf_turn (this_inf:unit_parameters) enemies g : cmd list =
     | [] ->
       let _ = print_endline("No buildings to go to") in
       begin
-      match (top_kill this_inf enemies g) with
+      match (top_kill_2 this_inf enemies g) with
       | Some (me,them) ->
         let _ = print_endline("Going attack someone") in
         [Move (my_pos,me); Attack (me,them)]

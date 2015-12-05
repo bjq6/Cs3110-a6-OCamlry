@@ -179,6 +179,7 @@ let next_to (a : unit_parameters) (enemy : unit_parameters) (g : gamestate) =
 let rec move_rand (m : terrain array array) (lst : unit_parameters list) =
   let y = (Array.length m) in
   let x = (Array.length (Array.get m 0)) in
+  let () = Random.self_init () in
   let (x',y') = ((Random.int x), (Random.int y)) in
   match (unit_at_loc lst (x',y'), (m.(x').(y') <> Water)) with
   | (None, true) -> Printf.printf "Random walking to (%d,%d)\n" x' y'; (x',y')
@@ -234,7 +235,7 @@ let rec my_buildings (g : gamestate) (lst : building_parameters list)
   | [] -> b
   | h::t ->
     if (h.owner = g.curr_player.player_name)
-      && (unit_at_loc g.unit_list h.position <> None)
+      && (unit_at_loc g.unit_list h.position = None)
     then my_buildings g t (h::b) else my_buildings g t b
 
 (* helper function for buy_ai. a = infantry, b = ocamlry, c = tank *)
@@ -366,7 +367,7 @@ let rec min_dist lst (x', y', d') =
 let move_it (u : unit_parameters) (x,y) (m : terrain array array)
   (lst : unit_parameters list) =
   let (x',y') = u.position in
-  if (abs(x-x') + abs(y-y')) <= u.curr_mvt
+  if ((abs(x-x') + abs(y-y')) <= u.curr_mvt) && (go_check (x,y) m lst)
   then (Move (u.position,(x,y))) (* move_rand in next_close_enemy_unit checks if this is valid*)
   else let mvt = u.curr_mvt in
   (*make matrix of mvt*mvt box coordinates around u.position*)
