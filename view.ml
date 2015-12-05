@@ -1,5 +1,7 @@
 open Graphics
 open Types
+open Util
+include Util
 (*Define the colors and variables that will be used in the game.  These
  * include tyle colors, active/inactive unit colors, and neutral colors
  *)
@@ -173,13 +175,33 @@ let update_status_bar gamestate =
     depopulate_map previous_state;
     populate_map updated_state;
     update_status_bar;
-    previous_state := update_state)
-*)
-let update_state new_gamestate =
-  depopulate_map new_gamestate;
-  populate_map new_gamestate;
-  update_status_bar new_gamestate
+    previous_state := update_state)*)
+let game_over_camel = (Util.read_image 400 "./Graphics/game_over_camel_red.csv"
+                                      "./Graphics/game_over_camel_blue.csv"
+                                      "./Graphics/game_over_camel_green.csv") 
+let game_over_text =  (Util.read_image 50  "./Graphics/game_over_text_red.csv"
+                                      "./Graphics/game_over_text_blue.csv"
+                                      "./Graphics/game_over_text_green.csv")
 
+let display_game_over_screen gameover_state = 
+  let winner = match gameover_state.curr_player.player_name with
+    |Player1 s -> s |Player2 s-> s in 
+  let score = gameover_state.curr_player.score in 
+  Graphics.clear_graph ();
+  Graphics.draw_image (Graphics.make_image game_over_text) 100 600;
+  Graphics.draw_image (Graphics.make_image game_over_camel) 300 100;
+  Printf.printf "Thanks for Playing!\n";
+  Printf.printf "Winner is %s with %d points!" winner score
+
+let update_state new_gamestate =
+  if new_gamestate.game_over = true then
+    display_game_over_screen new_gamestate
+  
+  else(
+    depopulate_map new_gamestate;
+    populate_map new_gamestate;
+    update_status_bar new_gamestate
+  )
 
 let init gamestate =
   create_map gamestate;

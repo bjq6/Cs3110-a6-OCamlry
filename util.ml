@@ -1,4 +1,5 @@
 open Types
+open Str
 
 let print_map (g:gamestate) = failwith "unimplemented"
 
@@ -165,7 +166,7 @@ let rec move_rand (m : terrain array array) (lst : unit_parameters list) =
   let x = (Array.length (Array.get m 0)) in
   let (x',y') = (Random.int x, Random.int y) in
   match (unit_at_loc lst (x',y'), (m.(x').(y') <> Water)) with
-  | (None, true) -> print_int x'; print_int y'; (x',y')
+  | (None, true) -> Printf.printf "Random walking to (%d,%d)" x y; (x',y')
   | (_,_) -> move_rand m lst
 
 
@@ -272,15 +273,16 @@ let buy_ai (g : gamestate) =
   let c' = List.length c in
   purchase (a',b',c') g.curr_player.money b_lst []
 
-(* AI: returns unit_parameters that are active and have moves *)
+(* AI: returns unit_parameters that are active and have not moved *)
 let rec out_of_moves (lst : unit_parameters list) (x : unit_parameters list) =
   match lst with
   | [] -> x
   | h::t ->
-    if (h.active)&&(h.curr_mvt > 0)
+    if (h.active)&&(h.curr_mvt = (base_access h).max_mvt)
     then out_of_moves t (h::x)
     else out_of_moves t x
 
+(* Game Start : Asks the player what map they want to play - returns int*)
 let rec get_map_num () : int =
   let _ = print_endline("Which map would you like to play?") in
   let _ = print_endline("1 - Plains\n2 - Test") in
@@ -293,6 +295,7 @@ let rec get_map_num () : int =
     let _ = print_endline("That is not a valid map. Please choose a number") in
     get_map_num ()
 
+(* Game Start : Asks the user what name this player should be - returns bytes*)
 let rec get_player_name (i:int) (other_name) : bytes =
   let _ = print_bytes("What is the name of player ");print_int(i);
           print_endline("?") in
@@ -306,7 +309,7 @@ let rec get_player_name (i:int) (other_name) : bytes =
       else name1
   | name1, None -> name1
 
-(*asks if user wants to play against an AI, returns true if yes*)
+(* Game Start: Asks if user wants to play against an AI, returns true if yes*)
 let rec play_ai () =
   Printf.printf "Would you like player 2 to be an AI? y/n\n";
   let str = read_line () in
@@ -380,8 +383,37 @@ let move_it (u : unit_parameters) (x,y) (m : terrain array array)
 
 
 
+(*Functions to read from simple csv files, helper functions for the Graphics
+ * module are defined here
+ *)
+let comma = Str.regexp ","
 
+let parse_line line = List.map int_of_string (Str.split_delim comma line)
 
+let rec make_triplet l1 l2 l3 = match (l1,l2,l3) with
+  |([],[],[]) -> []
+  |(h1::t1, h2::t2, h3::t3) -> (h1,h2,h3)::(make_triplet t1 t2 t3)
+  | _ -> failwith "should not happen"
+
+let read_image length red_file blue_file green_file =
+  let color_map = Array.make length [||] in
+  let red_chan = Pervasives.open_in red_file in
+  let blue_chan = Pervasives.open_in blue_file in
+  let green_chan = Pervasives.open_in green_file in
+  let counter = ref 0 in
+  try
+    while true; do
+      let curr_red_line =  parse_line (Pervasives.input_line red_chan) in
+      let curr_blue_line = parse_line (Pervasives.input_line blue_chan) in
+      let curr_green_line= parse_line (Pervasives.input_line green_chan) in
+      let rgb_list = make_triplet curr_red_line curr_blue_line curr_green_line in
+      color_map.(!counter) <- Array.of_list (
+        List.map (fun (r,g,b) -> Graphics.rgb r g b) rgb_list);
+      counter := !counter + 1;
+    done; color_map
+  with End_of_file ->
+    Pervasives.close_in red_chan;
+    color_map
 
 
 
