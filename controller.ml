@@ -16,7 +16,7 @@ let process_command (c:cmd) (g:gamestate) : gamestate =
   | Invalid s -> Printf.printf "Invalid command %s\n" s; g
   | Surrender ->
     (*surrender protocol:Clarkson Wins Exit 0 *)
-    print_endline "You Have Surrendered: Thank you for playing\n";
+    print_endline "You Have Surrendered.\n";
     g.game_over<-true;
     g
   | EndTurn ->
@@ -233,8 +233,11 @@ let rec main (s:gamestate) (ai_name: bytes option) (nxt_cmd: cmd list) =
     (*update view*)
     let () = Printf.printf ">>> Turn %d <<<\n" g.turn in
     let () = update_state g in
-    (*froot loop it and return unit. actual unit not matt unit*)
-    if end_game then () else main g ai_name next_cmd
+    (*Loop and return unit*)
+    if end_game then
+    let _ = print_endline("Press enter to end game") in
+    let _ = read_line () in ()
+    else main g ai_name next_cmd
 
 
   (** Starts the REPL *)

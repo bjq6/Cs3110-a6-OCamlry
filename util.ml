@@ -140,34 +140,46 @@ let rec building_check (a : unit_parameters) (lst : building_parameters list)
 let next_to (a : unit_parameters) (enemy : unit_parameters) (g : gamestate) =
     let (x1,y1) = a.position in
     let (x2,y2) = enemy.position in
-    if (((abs x1-x2) + (abs y1-y2)) > a.curr_mvt+1) then None
-    else if ((abs x1-x2) + (abs y1-y2)) = 1 then Some (x1,y1)
+    (*If enemy is too far away*)
+    if (((abs (x1-x2)) + (abs (y1-y2))) > a.curr_mvt+1) then None
+    (*If you are already next to the enemy*)
+    else if ((abs (x1-x2)) + (abs (y1-y2))) = 1 then Some (x1,y1)
+    (*Check 4 spaces around enemy unit
+    - Valid place on map
+    - Not water
+    - Enough curr_mvt to get there
+    - Not unit already there            *)
+    (*Right*)
     else if (map_check (x2+1,y2) g.map) &&
       ((abs (x1-(x2+1))) + (abs (y1-y2)) <= a.curr_mvt) &&
       (g.map.(x2+1).(y2) <> Water) &&
       (unit_at_loc g.unit_list (x2+1,y2) = None)
       then Some (x2+1,y2)
+    (*Left*)
     else if (map_check (x2-1,y2) g.map) &&
       (((abs (x1-(x2-1))) + (abs (y1-y2))) <= a.curr_mvt) &&
       (g.map.(x2-1).(y2) <> Water) &&
       (unit_at_loc g.unit_list (x2-1,y2) = None)
       then Some (x2-1,y2)
+    (*Above*)
     else if (map_check (x2,y2+1) g.map) &&
-      (((abs (x1-x2)) + (abs (y1-(y2+1))) <= a.curr_mvt) &&
+      ((abs (x1-x2)) + (abs (y1-(y2+1))) <= a.curr_mvt) &&
       (g.map.(x2).(y2+1) <> Water) &&
-      (unit_at_loc g.unit_list (x2,y2+1) = None))
+      (unit_at_loc g.unit_list (x2,y2+1) = None)
       then Some (x2,y2+1)
+    (*Below*)
     else if (map_check (x2,y2-1) g.map) &&
-      (((abs (x1-x2)) + (abs (y1-(y2-1))) <= a.curr_mvt) &&
+      ((abs (x1-x2)) + (abs (y1-(y2-1))) <= a.curr_mvt) &&
       (g.map.(x2).(y2-1) <> Water) &&
-      (unit_at_loc g.unit_list (x2,y2-1) = None))
+      (unit_at_loc g.unit_list (x2,y2-1) = None)
       then Some (x2,y2-1)
-    else None
+    else let _ = print_endline("Can't move next_to") in None
 
 (*generates random spot on map to move to bc why not*)
 let rec move_rand (m : terrain array array) (lst : unit_parameters list) =
   let y = (Array.length m) in
   let x = (Array.length (Array.get m 0)) in
+  let () = Random.self_init () in
   let (x',y') = ((Random.int x), (Random.int y)) in
   match (unit_at_loc lst (x',y'), (m.(x').(y') <> Water)) with
   | (None, true) -> Printf.printf "Random walking to (%d,%d)\n" x' y'; (x',y')
@@ -223,7 +235,7 @@ let rec my_buildings (g : gamestate) (lst : building_parameters list)
   | [] -> b
   | h::t ->
     if (h.owner = g.curr_player.player_name)
-      && (unit_at_loc g.unit_list h.position <> None)
+      && (unit_at_loc g.unit_list h.position = None)
     then my_buildings g t (h::b) else my_buildings g t b
 
 (* helper function for buy_ai. a = infantry, b = ocamlry, c = tank *)
@@ -289,7 +301,7 @@ let rec out_of_moves (lst : unit_parameters list) (x : unit_parameters list) =
 (* Game Start : Asks the player what map they want to play - returns int*)
 let rec get_map_num () : int =
   let _ = print_endline("Which map would you like to play?") in
-  let _ = print_endline("1 - Plains\n2 - Test\n3 - Tank Test") in
+  let _ = print_endline("1 - Plains\n2 - Pond\n3 - Center Stronghold") in
   let str = read_line () in
   let words = String.trim(str) in
   match words with
@@ -355,7 +367,7 @@ let rec min_dist lst (x', y', d') =
 let move_it (u : unit_parameters) (x,y) (m : terrain array array)
   (lst : unit_parameters list) =
   let (x',y') = u.position in
-  if (abs(x-x') + abs(y-y')) <= u.curr_mvt
+  if ((abs(x-x') + abs(y-y')) <= u.curr_mvt) && (go_check (x,y) m lst)
   then (Move (u.position,(x,y))) (* move_rand in next_close_enemy_unit checks if this is valid*)
   else let mvt = u.curr_mvt in
   (*make matrix of mvt*mvt box coordinates around u.position*)

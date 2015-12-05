@@ -64,9 +64,7 @@ let top_kill this_unit enemy_units g : (loc * loc) option =
           begin
             match (next_to this_unit h g)  with
             | Some m ->
-              let _ = print_endline("here1") in
-              let (x,y) = m in
-              let _ = Printf.printf "moving to (%d,%d)\n" x y in
+              (*let (x,y) = m in*)
               Some (m,h.position)
             | None -> attack_helper t
           end
@@ -80,7 +78,6 @@ let top_kill this_unit enemy_units g : (loc * loc) option =
               begin
                 match (next_to this_unit h g)  with
                 | Some m ->
-                  let _ = print_endline("here2") in
                   Some (m,h.position)
                 | None -> favorable_helper t
               end
@@ -91,6 +88,16 @@ let top_kill this_unit enemy_units g : (loc * loc) option =
       in
       attack_helper killable
 
+let top_kill_2 this_unit enemy_units g : (loc * loc) option =
+  let in_range = enemy_check this_unit enemy_units [] in
+  if in_range = [] then None else
+    let h = (List.hd in_range) in
+      match (next_to this_unit h g) with
+      | None -> None
+      | Some l -> Some (l, h.position)
+
+
+
 
 (* Contains logic for the reactionary agent of an infantry:
  * Tries to capture a building, if not, kill an enemy
@@ -98,9 +105,11 @@ let top_kill this_unit enemy_units g : (loc * loc) option =
 let inf_turn (this_inf:unit_parameters) enemies g : cmd list =
 
   let my_pos = this_inf.position in
-  let loc_to_go =
-  (next_close_enemy_unit this_inf enemies g.building_list g.map g.unit_list) in
-  let backup_step = move_it this_inf loc_to_go g.map g.unit_list in
+
+  let backup_step =
+    let loc_to_go =
+   (next_close_enemy_unit this_inf enemies g.building_list g.map g.unit_list) in
+  move_it this_inf loc_to_go g.map g.unit_list in
 
   (*Currently capturing a building?*)
   begin
@@ -118,7 +127,7 @@ let inf_turn (this_inf:unit_parameters) enemies g : cmd list =
     | [] ->
       let _ = print_endline("No buildings to go to") in
       begin
-      match (top_kill this_inf enemies g) with
+      match (top_kill_2 this_inf enemies g) with
       | Some (me,them) ->
         let _ = print_endline("Going attack someone") in
         [Move (my_pos,me); Attack (me,them)]
@@ -144,11 +153,10 @@ let caml_turn (this_caml:unit_parameters) enemies g : cmd list =
   (next_close_enemy_unit this_caml enemies g.building_list g.map g.unit_list) in
   *)
 
-  let _ = print_endline("Caml going killing") in
-
-  let top_inf = (top_kill this_caml enemy_i g) in
-  let top_caml = (top_kill this_caml enemy_c g) in
-  let top_tank = (top_kill this_caml enemy_t g) in
+  let _ = Printf.printf "Inf = %d; Caml = %d; Tank = %d\n" (List.length enemy_i) (List.length enemy_c) (List.length enemy_t) in
+  let top_inf = (top_kill_2 this_caml enemy_i g) in
+  let top_caml = (top_kill_2 this_caml enemy_c g) in
+  let top_tank = (top_kill_2 this_caml enemy_t g) in
 
   match top_inf, top_caml, top_tank with
     (*Try to kill infantry first*)
@@ -179,12 +187,10 @@ let tank_turn (this_tank:unit_parameters) enemies g : cmd list =
   let backup_step =
   (next_close_enemy_unit this_caml enemies g.building_list g.map g.unit_list) in
   *)
-
-  let _ = print_endline("Tank going killing") in
-
-  let top_inf = (top_kill this_tank enemy_i g) in
-  let top_caml = (top_kill this_tank enemy_c g) in
-  let top_tank = (top_kill this_tank enemy_t g) in
+  let _ = Printf.printf "Inf = %d; Caml = %d; Tank = %d\n" (List.length enemy_i) (List.length enemy_c) (List.length enemy_t) in
+  let top_inf = (top_kill_2 this_tank enemy_i g) in
+  let top_caml = (top_kill_2 this_tank enemy_c g) in
+  let top_tank = (top_kill_2 this_tank enemy_t g) in
 
   match top_inf, top_caml, top_tank with
     (*Try to kill infantry first*)
@@ -214,11 +220,13 @@ let start_ai (g:gamestate) : cmd list =
   let my_units = out_of_moves my_guys [] in
   let (my_inf,my_camls,my_tanks) = sort_units my_units ([],[],[]) in
 
+
   let enemy_units = get_units g.unit_list (next_player g).player_name [] in
   (*let (enemy_i,enemy_c,enemy_t) = sort_units enemy_units ([],[],[]) in*)
 
   match my_tanks, my_camls, my_inf with
-  | [], [], [] -> let _ = print_endline("AI is out of units") in [EndTurn]
+  | [], [], [] -> let _ = print_endline("AI is out of units") in
+      (buy_ai g)@[EndTurn]
   | _, _, curr_inf::t -> inf_turn curr_inf enemy_units g
   | [], curr_caml::t, _ -> caml_turn curr_caml enemy_units g
   | curr_tank::t, _, _  -> tank_turn curr_tank enemy_units g
