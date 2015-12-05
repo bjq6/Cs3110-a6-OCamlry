@@ -68,3 +68,12 @@ val get_map_num : unit -> int
 val get_player_name : int -> bytes option -> bytes
 
 val play_ai : unit -> bool
+
+val go_check : int*int -> terrain array array -> unit_parameters list -> bool
+
+val dist : (int*int) list -> (int*int*int) list -> int*int -> (int*int*int) list
+
+val min_dist : (int*int*int) list -> (int*int*int) -> (int*int*int)
+
+val move_it : unit_parameters -> int*int -> terrain array array ->
+ unit_parameters list -> cmd
