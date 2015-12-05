@@ -173,7 +173,7 @@ let rec move_rand (m : terrain array array) (lst : unit_parameters list) =
 (* AI: if attacking/moving to target in range not viable, provide location for
  * infantry to move to nearest capturable building and tank/ocamlry to move to
  * nearest enemy. lst is already a pre-filtered list of enemies. lst' is all u*)
-let move_towards_enemy_unit (u : unit_parameters) (lst : unit_parameters list)
+let next_close_enemy_unit (u : unit_parameters) (lst : unit_parameters list)
   (b_lst : building_parameters list) (m : terrain array array)
   (lst' : unit_parameters list) : loc =
   match u.typ with

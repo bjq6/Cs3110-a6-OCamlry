@@ -98,7 +98,7 @@ let inf_turn (this_inf:unit_parameters) enemies g : cmd list =
 
   let my_pos = this_inf.position in
   let backup_step =
-  (move_towards_enemy_unit this_inf enemies g.building_list g.map g.unit_list) in
+  (next_close_enemy_unit this_inf enemies g.building_list g.map g.unit_list) in
 
   (*Currently capturing a building?*)
   begin
