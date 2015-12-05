@@ -163,7 +163,6 @@ let caml_turn (this_caml:unit_parameters) enemies g : cmd list =
             [Move (my_pos,me); Attack (me,them)]
   | None,None,None  ->
       let _ = print_endline("Caml: No one to attack now. Moving in for more") in
-            (* R E P L A C E    T H I S    W I T H    M O V E*)
             [backup_step]
 
 (* Contains logic for the reactionary agent of a Camlry:
@@ -200,7 +199,6 @@ let tank_turn (this_tank:unit_parameters) enemies g : cmd list =
             [Move (my_pos,me); Attack (me,them)]
   | None,None,None  ->
       let _ = print_endline("Tank: No one to attack now. Moving in for more") in
-            (* R E P L A C E    T H I S    W I T H    M O V E*)
             [backup_step]
 
 (* start_ai will take the current game state and compute what the best move
