@@ -1,4 +1,5 @@
 open Types
+open Str
 
 let print_map (g:gamestate) = failwith "unimplemented"
 
@@ -249,8 +250,37 @@ let rec out_of_moves (lst : unit_parameters list) (x : unit_parameters list) =
 
 
 
+(*Functions to read from simple csv files, helper functions for the Graphics
+ * module are defined here
+ *)
+let comma = Str.regexp ","
 
+let parse_line line = List.map int_of_string (Str.split_delim comma line)
 
+let rec make_triplet l1 l2 l3 = match (l1,l2,l3) with
+  |([],[],[]) -> []
+  |(h1::t1, h2::t2, h3::t3) -> (h1,h2,h3)::(make_triplet t1 t2 t3)
+  | _ -> failwith "should not happen"
+
+let read_image length red_file blue_file green_file =
+  let color_map = Array.make length [||] in
+  let red_chan = Pervasives.open_in red_file in
+  let blue_chan = Pervasives.open_in blue_file in
+  let green_chan = Pervasives.open_in green_file in
+  let counter = ref 0 in
+  try
+    while true; do
+      let curr_red_line =  parse_line (Pervasives.input_line red_chan) in
+      let curr_blue_line = parse_line (Pervasives.input_line blue_chan) in
+      let curr_green_line= parse_line (Pervasives.input_line green_chan) in
+      let rgb_list = make_triplet curr_red_line curr_blue_line curr_green_line in
+      color_map.(!counter) <- Array.of_list (
+        List.map (fun (r,g,b) -> Graphics.rgb r g b) rgb_list);
+      counter := !counter + 1;
+    done; color_map
+  with End_of_file ->
+    Pervasives.close_in red_chan;
+    color_map
 
 
 

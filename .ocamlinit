@@ -1,6 +1,7 @@
 #require "async";;
 
 #require "graphics";;
+#require "str";;
 
 #require "async";;
 #directory "_build";;

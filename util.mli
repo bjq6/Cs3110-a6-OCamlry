@@ -70,3 +70,5 @@ val process_surrender : unit -> unit
 val process_invalid : unit -> gamestate
 
 ---------------------------------------------*)
+
+val read_image : int -> string -> string -> string -> Graphics.color array array

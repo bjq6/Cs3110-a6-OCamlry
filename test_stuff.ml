@@ -26,7 +26,8 @@ let test_init_state3 = {
      create_dummy_unit (Player2 "") 9 8 (Tank);
      create_dummy_unit (Player2 "") 9 7 (Ocamlry)];
   building_list = [];
-  game_over = false
+  game_over = false;
+  turn = 100;
 }
 
 let test_init_state4= {
@@ -52,6 +53,33 @@ let test_init_state4= {
      create_dummy_unit (Player2 "") 9 7 (Ocamlry)];
   building_list = [];
   game_over = false;
+  turn = 0 
 }
+ 
 
-
+let test_game_over_state = {
+  map = [|[|Building (Some (Player2 "")); Plain; Plain; Water; Plain; Plain; Plain; Plain; Plain; Plain|];
+          [|Plain; Plain; Plain; Building (Some (Player1 "")); Plain; Plain; Plain; Plain; Plain; Plain|];
+          [|Plain; Plain; Plain; Water; Plain; Plain; Plain; Plain; Plain; Plain|];
+          [|Plain; Plain; Plain; Water; Plain; Plain; Plain; Plain; Plain; Plain|];
+          [|Plain; Plain; Plain; Plain; Plain; Water; Water; Plain; Plain; Plain|];
+          [|Plain; Plain; Plain; Plain; Plain; Water; Water; Plain; Plain; Plain|];
+          [|Plain; Plain; Plain; Plain; Plain; Water; Water; Plain; Plain; Plain|];
+          [|Plain; Plain; Plain; Plain; Plain; Water; Water; Plain; Plain; Plain|];
+          [|Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain|];
+          [|Plain; Plain; Plain; Plain; Plain; Plain; Plain; Building (Some (Player2 "")); Plain; Plain|]
+          |];
+  curr_player = {player_name = Player1 "Michael Clarkson"; money= 0; score = 0 };
+  player_state = [];
+  unit_list =
+    [create_dummy_unit (Player1 "") 0 1 (Infantry);
+     create_dummy_unit (Player1 "") 1 0 (Tank);
+     create_dummy_unit (Player1 "") 1 1 (Ocamlry);
+     create_dummy_unit (Player2 "") 9 9 (Infantry);
+     create_dummy_unit (Player2 "") 9 8 (Tank);
+     create_dummy_unit (Player2 "") 9 7 (Ocamlry)];
+  building_list = [];
+  game_over = true;
+  turn = 99
+}
+ 
