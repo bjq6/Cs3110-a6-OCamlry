@@ -67,7 +67,7 @@ let top_kill this_unit enemy_units g : (loc * loc) option =
               let _ = print_endline("here1") in
               let (x,y) = m in
               let _ = Printf.printf "moving to (%d,%d)\n" x y in
-              Some (this_unit.position,m)
+              Some (m,h.position)
             | None -> attack_helper t
           end
         | [] ->
@@ -81,7 +81,7 @@ let top_kill this_unit enemy_units g : (loc * loc) option =
                 match (next_to this_unit h g)  with
                 | Some m ->
                   let _ = print_endline("here2") in
-                  Some (this_unit.position,m)
+                  Some (m,h.position)
                 | None -> favorable_helper t
               end
             | [] -> None

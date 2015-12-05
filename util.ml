@@ -142,19 +142,19 @@ let next_to (a : unit_parameters) (enemy : unit_parameters) (g : gamestate) =
     let (x2,y2) = enemy.position in
     if (((abs x1-x2) + (abs y1-y2)) > a.curr_mvt+1)
     then None
-    else if (((abs x1-(x2+1)) + (abs y1-y2)) <= a.curr_mvt) &&
+    else if ((abs (x1-(x2+1))) + (abs (y1-y2)) <= a.curr_mvt) &&
       (g.map.(x2+1).(y2) <> Water) && (map_check (x2+1,y2) g.map) &&
       (unit_at_loc g.unit_list (x2+1,y2) = None)
       then Some (x2+1,y2)
-    else if (((abs x1-(x2-1)) + (abs y1-y2)) <= a.curr_mvt) &&
+    else if (((abs (x1-(x2-1))) + (abs (y1-y2))) <= a.curr_mvt) &&
       (g.map.(x2-1).(y2) <> Water) && (map_check (x2-1,y2) g.map) &&
       (unit_at_loc g.unit_list (x2-1,y2) = None)
       then Some (x2-1,y2)
-    else if (((abs x1-x2) + (abs y1-(y2+1)) <= a.curr_mvt) &&
+    else if (((abs (x1-x2)) + (abs (y1-(y2+1))) <= a.curr_mvt) &&
       (g.map.(x2).(y2+1) <> Water) && (map_check (x2,y2+1) g.map) &&
       (unit_at_loc g.unit_list (x2,y2+1) = None))
       then Some (x2,y2+1)
-    else if (((abs x1-x2) + (abs y1-(y2-1)) <= a.curr_mvt) &&
+    else if (((abs (x1-x2)) + (abs (y1-(y2-1))) <= a.curr_mvt) &&
       (g.map.(x2).(y2-1) <> Water) && (map_check (x2,y2-1) g.map) &&
       (unit_at_loc g.unit_list (x2,y2-1) = None))
       then Some (x2,y2-1)
@@ -164,7 +164,7 @@ let next_to (a : unit_parameters) (enemy : unit_parameters) (g : gamestate) =
 let rec move_rand (m : terrain array array) (lst : unit_parameters list) =
   let y = (Array.length m) in
   let x = (Array.length (Array.get m 0)) in
-  let (x',y') = (Random.int x, Random.int y) in
+  let (x',y') = ((Random.int x), (Random.int y)) in
   match (unit_at_loc lst (x',y'), (m.(x').(y') <> Water)) with
   | (None, true) -> Printf.printf "Random walking to (%d,%d)\n" x' y'; (x',y')
   | (_,_) -> move_rand m lst
