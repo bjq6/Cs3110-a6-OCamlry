@@ -130,11 +130,40 @@ let inf_turn (this_inf:unit_parameters) enemies g : cmd list =
   end
 
 
-(*
-let caml_turn this_inf enemy_inf enemy_camls enemy_tanks g : cmd list =
-      failwith "unimplemented"
+let caml_turn (this_caml:unit_parameters) enemies g : cmd list =
 
-let tank_turn this_inf enemy_inf enemy_camls enemy_tanks g : cmd list =
+  let my_pos = this_caml.position in
+  let (enemy_i,enemy_c,enemy_t) = sort_units enemies ([],[],[]) in
+  (*
+  let backup_step =
+  (next_close_enemy_unit this_caml enemies g.building_list g.map g.unit_list) in
+  *)
+
+  let _ = print_endline("Caml going killing") in
+
+  let top_inf = (top_kill this_caml enemy_i g) in
+  let top_caml = (top_kill this_caml enemy_c g) in
+  let top_tank = (top_kill this_caml enemy_t g) in
+
+  match top_inf, top_caml, top_tank with
+    (*Try to kill infantry first*)
+  | Some (me,them),_,_ ->
+      let _ = print_endline("Caml attacking Infantry") in
+            [Move (my_pos,me); Attack (me,them)]
+  | None,_,Some (me,them)  ->
+      let _ = print_endline("Caml attacking Tank") in
+            [Move (my_pos,me); Attack (me,them)]
+  | None,Some (me,them),None  ->
+      let _ = print_endline("Caml attacking Caml") in
+            [Move (my_pos,me); Attack (me,them)]
+  | None,None,None  ->
+      let _ = print_endline("Caml: No one to attack now. Moving in for more") in
+            (* R E P L A C E    T H I S    W I T H    M O V E*)
+            [EndTurn]
+
+
+(*
+let tank_turn (this_tank:unit_parameters) enemies g : cmd list =
       failwith "unimplemented"
 *)
 
@@ -157,9 +186,9 @@ let start_ai (g:gamestate) : cmd list =
   match my_tanks, my_camls, my_inf with
   | [], [], [] -> [EndTurn]
   | _, _, curr_inf::t -> inf_turn curr_inf enemy_units g
+  | [], curr_caml::t, _ -> caml_turn curr_caml enemy_units g
   (*
-  | [], curr_caml::t, _ -> caml_turn curr_inf enemy_i enemy_c enemy_t g
-  | curr_tank::t, _, _  -> tank_turn curr_inf enemy_i enemy_c enemy_t g
+  | curr_tank::t, _, _  -> tank_turn curr_tank g
   *)
   | _,_,_ ->
     let _ = print_endline("I didn't know what to do") in
