@@ -6,6 +6,7 @@ open Gamestates
 open View
 open Ai
 
+
 (** Process command will receive a command from the user module, make sense of it
  * and call the proper process function below - basically a wrapper for below *)
 (*you are welcome to clean this up, just trying to get something to work now*)
@@ -19,6 +20,7 @@ let process_command (c:cmd) (g:gamestate) : gamestate =
     g.game_over<-true;
     g
   | EndTurn ->
+    print_endline "End Turn";
     (*modify gamestate to change player*)
       g.curr_player <- next_player g;
     (*add money to new players bank(100 per building owned)*)
@@ -29,6 +31,7 @@ let process_command (c:cmd) (g:gamestate) : gamestate =
       refresh g.unit_list; g
 
   | Move ((x1,y1),(x2,y2)) ->
+    Printf.printf "Moving from (%d,%d) to (%d,%d)\n" x1 y1 x2 y2;
     (*check to see if unit present belonging to current player*)
     begin
 
@@ -50,7 +53,7 @@ let process_command (c:cmd) (g:gamestate) : gamestate =
     (*check y to see if space available and is plain or building*)
 
       match (unit_at_loc g.unit_list (x2,y2)) with
-      | Some z -> print_int x2; print_int y2;
+      | Some z ->
         print_endline "Space currently occupied by unit"; g
       | None -> if ((g.map).(x2).(y2) = Water)
         then (print_endline "Can't move to water"; g)
@@ -67,6 +70,7 @@ let process_command (c:cmd) (g:gamestate) : gamestate =
     (*if any conditions fail: print error message, return original state*)
     (*return new gamestate*)
   | Attack ((x1,y1),(x2,y2)) ->
+    Printf.printf "Attacking from (%d,%d) to (%d,%d)\n" x1 y1 x2 y2;
     (*check x to see if unit present belonging to current player*)
     begin
 
@@ -95,7 +99,7 @@ let process_command (c:cmd) (g:gamestate) : gamestate =
         let range = abs (x1-x2) + abs (y1-y2) in
         let base = base_access u in
         if (range > base.attack_range)
-          then (print_endline "Movement is too far"; g)
+          then (print_endline "Attack is too far"; g)
           else
     (*call battle function in util with two units. returns unit list*)
            let (i, new_unit_list) = battle u target g.unit_list in
@@ -110,6 +114,8 @@ let process_command (c:cmd) (g:gamestate) : gamestate =
     g
     end
   | Capture (x,y) ->
+    Printf.printf "Capturing building at (%d,%d)\n" x y;
+
   (*same as attack but with unit, building on same space*)
   (*only infantry can capture*)
 
@@ -192,71 +198,41 @@ let process_command (c:cmd) (g:gamestate) : gamestate =
     (*update the gamestate*)
     g)
 
+
+
+
+
 (** Loop/Repl - prompts user, process_command, update gamestate, call main again *)
 let rec main (s:gamestate) (ai_name: bytes option) (nxt_cmd: cmd list) =
   (*check if AI; get command from AI or user*)
   let str = match s.curr_player.player_name with Player1 s -> s |Player2 s-> s in
 
+  let (cmd_2_process,next_cmd) =
   match str, ai_name, nxt_cmd with
   | cur_p,Some ai, h::t ->
-    let _ = print_endline("AI Continue") in
-    let g = process_command h s in
-    let end_game = g.game_over  in (*Need to add something to type to see if game has ended*)
-    (*update view*)
-    let () = Printf.printf "Turn %d\n" g.turn in
-    let () = update_state g in
-    (*froot loop it and return unit. actual unit not matt unit*)
-    if end_game then () else main g ai_name t
-
+    (*let _ = after (Core.Std.sec 1.) in*)
+    (h,t)
   | cur_p, Some ai, [] ->
-          let _ = print_endline("AI Start") in
     if (cur_p = ai) then
-      let _ = print_endline("getting ai commands") in
+      (*let _ = after (Core.Std.sec 1.) in*)
+          let _ = print_endline("AI's Turn") in
       let commands_to_do = start_ai s in
-      let _ = print_endline("got em") in
-      begin
-      match commands_to_do with
-      | h::t ->
-        let g = process_command h s in
-        let end_game = g.game_over  in (*Need to add something to type to see if game has ended*)
-        (*update view*)
-        let () = Printf.printf "Turn %d\n" g.turn in
-        let () = update_state g in
-        (*froot loop it and return unit. actual unit not matt unit*)
-        if end_game then () else main g ai_name t
-      | [] ->
-            let _ = print_endline("AI is tired of these silly games") in
-        let g = process_command (EndTurn) s in
-        let end_game = g.game_over  in (*Need to add something to type to see if game has ended*)
-        (*update view*)
-        let () = Printf.printf "Turn %d\n" g.turn in
-        let () = update_state g in
-        (*froot loop it and return unit. actual unit not matt unit*)
-        if end_game then () else main g ai_name []
-      end
-    else
-    let _ = print_endline("Normal game 1") in
-    let cmd = getcmd (str) in
-    (*process command*)
-    let g = process_command cmd s in
-    let end_game = g.game_over  in (*Need to add something to type to see if game has ended*)
-    (*update view*)
-    let () = Printf.printf "Turn %d\n" g.turn in
-    let () = update_state g in
-    (*froot loop it and return unit. actual unit not matt unit*)
-    if end_game then () else main g ai_name []
-
+        begin
+        match commands_to_do with
+        | h::t -> (h,t)
+        | [] -> let _ = print_endline("AI is confused") in (EndTurn,[])
+        end
+    else let cmd = getcmd (str) in (cmd,[])
   | _,None,_ ->
-    let _ = print_endline("Normal game 2") in
-    let cmd = getcmd (str) in
-    (*process command*)
-    let g = process_command cmd s in
+    let cmd = getcmd (str) in (cmd,[])
+  in
+    let g = process_command cmd_2_process s in
     let end_game = g.game_over  in (*Need to add something to type to see if game has ended*)
     (*update view*)
-    let () = Printf.printf "Turn %d\n" g.turn in
+    let () = Printf.printf ">>> Turn %d <<<\n" g.turn in
     let () = update_state g in
     (*froot loop it and return unit. actual unit not matt unit*)
-    if end_game then () else main g ai_name []
+    if end_game then () else main g ai_name next_cmd
 
 
   (** Starts the REPL *)
