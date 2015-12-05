@@ -98,12 +98,13 @@ let inf_turn (this_inf:unit_parameters) enemies g : cmd list =
 
   let my_pos = this_inf.position in
   let backup_step =
-  (move_towards_enemy_unit this_inf enemies g.building_list g.map) in
+  (move_towards_enemy_unit this_inf enemies g.building_list g.map g.unit_list) in
 
   (*Currently capturing a building?*)
   begin
   match (b_at_loc g.building_list my_pos) with
   | Some b ->
+      let _ = print_endline("Capturing a building") in
       if (not(g.curr_player.player_name = b.owner)) then [Capture my_pos]
       else [Move (my_pos,backup_step)]
   | None ->
@@ -111,12 +112,19 @@ let inf_turn (this_inf:unit_parameters) enemies g : cmd list =
     let near_buildings = building_check this_inf g.building_list [] g.unit_list in
     begin
     match near_buildings with
-    | h::_ -> [Move (this_inf.position,h.position); Capture h.position]
+    | h::_ ->
+      let _ = print_endline("Going to capture a building") in
+      [Move (this_inf.position,h.position); Capture h.position]
     | [] ->
+      let _ = print_endline("Going to kill bitches") in
       begin
       match (top_kill this_inf enemies g) with
-      | Some (me,them) -> [Move (my_pos,me); Attack (me,them)]
-      | None -> [Move (my_pos,backup_step)]
+      | Some (me,them) ->
+        let _ = print_endline("Going attack someone") in
+        [Move (my_pos,me); Attack (me,them)]
+      | None ->
+        let _ = print_endline("Just going for a walk") in
+        [Move (my_pos,backup_step)]
       end
     end
   end
@@ -139,20 +147,21 @@ have at least one command in it, but at most two commands. *)
 
 let start_ai (g:gamestate) : cmd list =
 
-  let my_guys = get_units g.unit_list g.curr_player [] in
+  let my_guys = get_units g.unit_list g.curr_player.player_name [] in
   let my_units = out_of_moves my_guys [] in
   let (my_inf,my_camls,my_tanks) = sort_units my_units ([],[],[]) in
 
-  let enemy_units = get_units g.unit_list (next_player g) [] in
-  let (enemy_i,enemy_c,enemy_t) = sort_units enemy_units ([],[],[]) in
+  let enemy_units = get_units g.unit_list (next_player g).player_name [] in
+  (*let (enemy_i,enemy_c,enemy_t) = sort_units enemy_units ([],[],[]) in*)
 
   match my_tanks, my_camls, my_inf with
   | [], [], [] -> [EndTurn]
-  | [], [], curr_inf::t -> inf_turn curr_inf enemy_i enemy_c enemy_t g
-
+  | _, _, curr_inf::t -> inf_turn curr_inf enemy_units g
   (*
   | [], curr_caml::t, _ -> caml_turn curr_inf enemy_i enemy_c enemy_t g
   | curr_tank::t, _, _  -> tank_turn curr_inf enemy_i enemy_c enemy_t g
   *)
-  | _ -> [Surrender]
+  | _,_,_ ->
+    let _ = print_endline("I didn't know what to do") in
+    [EndTurn]
 

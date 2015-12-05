@@ -160,24 +160,28 @@ let next_to (a : unit_parameters) (enemy : unit_parameters) (g : gamestate) =
     else None
 
 (*generates random spot on map to move to bc why not*)
-let move_rand (m : terrain array array) =
+let rec move_rand (m : terrain array array) (lst : unit_parameters list) =
   let y = (Array.length m) in
   let x = (Array.length (Array.get m 0)) in
-  (Random.int x, Random.int y)
+  let (x',y') = (Random.int x, Random.int y) in
+  match unit_at_loc lst (x',y') with
+  | None -> print_int x'; print_int y'; (x',y')
+  | Some _ -> move_rand m lst
 
 
 
 (* AI: if attacking/moving to target in range not viable, provide location for
  * infantry to move to nearest capturable building and tank/ocamlry to move to
- * nearest enemy. lst is already a pre-filtered list of enemies*)
+ * nearest enemy. lst is already a pre-filtered list of enemies. lst' is all u*)
 let move_towards_enemy_unit (u : unit_parameters) (lst : unit_parameters list)
-  (b_lst : building_parameters list) (m : terrain array array) : loc =
+  (b_lst : building_parameters list) (m : terrain array array)
+  (lst' : unit_parameters list) : loc =
   match u.typ with
   | Infantry ->
     let targets = List.filter (fun x -> (x.owner <> u.plyr)) b_lst in
     begin
     match targets with
-    | [] -> move_rand m
+    | [] -> move_rand m lst'
     | h::t ->
     let (x1,y1) = u.position in
     let distance a b =
@@ -189,10 +193,10 @@ let move_towards_enemy_unit (u : unit_parameters) (lst : unit_parameters list)
     go.position;
     end
 
-  | _ ->
+  | Tank | Ocamlry  ->
     begin
     match lst with
-    | [] -> move_rand m
+    | [] -> move_rand m lst'
     | hd::tl ->
     let (x1,y1) = u.position in
     let distance' (a : unit_parameters) (b : unit_parameters) : unit_parameters =
@@ -303,9 +307,10 @@ let rec get_player_name (i:int) (other_name) : bytes =
 
 (*asks if user wants to play against an AI, returns true if yes*)
 let rec play_ai () =
-  Printf.printf "Would you like to play against an AI? y/n\n";
+  Printf.printf "Would you like player 2 to be an AI? y/n\n";
   let str = read_line () in
-  match str with
+  let str2 = String.trim str in
+  match str2 with
   |"y" |"Y" | "yes" | "Yes" -> true
   |"n" |"N" | "no" | "No" -> false
   | _ -> Printf.printf "Invalid command"; play_ai ()
