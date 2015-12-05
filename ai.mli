@@ -15,3 +15,5 @@ val favorable_trade : unit_parameters -> unit_parameters -> bool
 val top_kill : unit_parameters -> unit_parameters list -> gamestate -> (loc*loc) option
 
 val inf_turn : unit_parameters -> unit_parameters list -> gamestate -> cmd list
+
+val start_ai : gamestate -> cmd list

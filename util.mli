@@ -37,38 +37,36 @@ val building_check : unit_parameters -> building_parameters list ->
 
 val next_to : unit_parameters -> unit_parameters -> gamestate -> loc option
 
-val move_rand : terrain array array -> int*int
+val move_rand : terrain array array -> unit_parameters list -> int*int
 
-val move_towards_enemy_unit : unit_parameters -> unit_parameters list ->
-  building_parameters list -> terrain array array -> int*int
+val next_close_enemy_unit : unit_parameters -> unit_parameters list ->
+  building_parameters list -> terrain array array -> unit_parameters list ->
+  int*int
+
+val my_buildings : gamestate -> building_parameters list ->
+  building_parameters list -> building_parameters list
+
+val purchase : int*int*int -> int -> building_parameters list -> cmd list ->
+  cmd list
+
+val buy_ai : gamestate -> cmd list
 
 val out_of_moves : unit_parameters list -> unit_parameters list ->
   unit_parameters list
 
-(*---------Commands from process command--------
+val get_map_num : unit -> int
 
-(** Given a unit *)
-val process_movement : loc * loc ->  gamestate
+val get_player_name : int -> bytes option -> bytes
 
-(** Given first a unit and then the unit it is attacking, it returns the
-  gamestate with the proper damage and deaths made*)
-val process_attack : loc * loc -> gamestate
+val play_ai : unit -> bool
 
-(** Purchases a unit of type unit_type for the current player and places it at
-  loc provided that there is a building there that doesn't already have a unit
-  on it and the current player has the proper resources to purchase the unit*)
-val process_buy : loc * unit_type -> gamestate
+val go_check : int*int -> terrain array array -> unit_parameters list -> bool
 
-(** Ends the turn, reactivates units, updates monies and turns over control*)
-val process_end_turn : unit -> gamestate
+val dist : (int*int) list -> (int*int*int) list -> int*int -> (int*int*int) list
 
-(** Ends the game *)
-val process_surrender : unit -> unit
-
-(** Sends the game in a full loop and makes the player try re-entering the
-  * command *)
-val process_invalid : unit -> gamestate
-
----------------------------------------------*)
+val min_dist : (int*int*int) list -> (int*int*int) -> (int*int*int)
 
 val read_image : int -> string -> string -> string -> Graphics.color array array
+
+val move_it : unit_parameters -> int*int -> terrain array array ->
+ unit_parameters list -> cmd

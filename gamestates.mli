@@ -1,5 +1,6 @@
 open Util
 open Types
 
-val state1 : gamestate
-val state2 : gamestate
+(** Takes in an int representing a map (first thing asked for in REPL) and
+ * sets ups a game *)
+val configure : int -> bytes -> bytes -> gamestate
