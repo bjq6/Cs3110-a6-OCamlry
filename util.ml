@@ -323,68 +323,6 @@ let go_check (x,y) (m : terrain array array) (lst : unit_parameters list) =
   (m.(x).(y) <> Water) && (unit_at_loc lst (x,y) = None)
     && (map_check (x,y) m)
 
-(* Given unit curr_mvt, current location and (invalid) target location, return
- * the next best target location
-let rec next_best_mvt (mvt : int) (x',y') (x,y) (m : terrain array array)
-  (lst : unit_parameters list) =
-  (* base case that should not occur but just in case *)
-  if ((x=x')&&(y=y')) then (x,y) else
-  (*another fail check if my logic is wrong*)
-  if (map_check (x,y) m = false)
-    then print_endline "next_best_mvt logic error"; (x',y') else
-  (*if target is to the left of unit*)
-  if (x >= x') then let x_mvt = x' + (min (x-x') (mvt)) in
-    (*if target is upwards of unit*)
-    if (y >= y') then let y_mvt = y' + (min (y-y') (mvt - x_mvt)) in
-      if (go_check (x_mvt,y_mvt) m lst) then (x_mvt,y_mvt)
-        else if (x=x') then next_best_mvt mvt (x',y') (x_mvt, y_mvt - 1) m lst
-             else next_best_mvt mvt (x',y') (x_mvt, y_mvt) m lst
-    (*if target is below unit*)
-    else let y_mvt = y' - (min (y'-y) (mvt - x_mvt)) in
-      if (go_check (x_mvt,y_mvt) m lst) then (x_mvt,y_mvt)
-        else next_best_mvt mvt (x',y') (x_mvt, y_mvt) m lst
-  (*if target is to the right of unit*)
-  else let x_mvt = x' - (min (x'-x) (mvt)) in
-    (*if target is upwards of unit*)
-    if (y >= y') then let y_mvt = y' + (min (y-y') (mvt - x_mvt)) in
-      if (go_check (x_mvt,y_mvt) m lst) then (x_mvt,y_mvt)
-        else next_best_mvt mvt (x',y') (x_mvt, y_mvt) m lst
-    (*if target is below unit*)
-    else let y_mvt = y' - (min (y'-y) (mvt - x_mvt)) in
-      if (go_check (x_mvt,y_mvt) m lst) then (x_mvt,y_mvt)
-        else next_best_mvt mvt (x',y') (x_mvt, y_mvt) m lst
-
-
-
-(* AI: inputs: unit_parameter, target location that unit is trying to get close
- * to, map, gamestate unit_list. output: cmd to move to that location or
- * try to get close to it*)
-let move_it (u : unit_parameter) (x,y) (m : terrain array array)
-  (lst : unit_parameters list) =
-  let (x',y') = u.position in
-  if (abs(x-x') + abs(y-y')) <= u.curr_mvt
-  then (Move (u.position,(x,y))) (* move_rand in next_close_enemy_unit checks if this is valid*)
-  else
-    let mvt = u.curr_mvt in
-
-    (*if target is to the left of unit*)
-    if (x >= x') then let x_mvt = x' + (min (x-x') (mvt)) in
-      (*if target is upwards of unit*)
-      if (y >= y') then let y_mvt = y' + (min (y-y') (mvt - x_mvt)) in
-        if (go_check (x_mvt,y_mvt) m lst) then (Move (u.position,(x_mvt,y_mvt)))
-          else (*find new valid loc*)
-      else let y_mvt = y' - (min (y'-y) (mvt - x_mvt)) in
-        if (go_check (x_mvt,y_mvt) m lst) then (Move (u.position,(x_mvt,y_mvt)))
-          else (*find new valid loc*)
-    else let x_mvt = x' - (min (x'-x) (mvt)) in
-      (*if target is upwards of unit*)
-      if (y >= y') then let y_mvt = y' + (min (y-y') (mvt - x_mvt)) in
-        if (go_check (x_mvt,y_mvt) m lst) then (Move (u.position,(x_mvt,y_mvt)))
-          else (*find new valid loc*)
-      else let y_mvt = y' - (min (y'-y) (mvt - x_mvt)) in
-        if (go_check (x_mvt,y_mvt) m lst) then (Move (u.position,(x_mvt,y_mvt)))
-          else (*find new valid loc*)
-*)
 
 (*lst is list of potential movement spots; x',y' is target location, lst' = []*)
 let rec dist lst lst' (x',y') =
