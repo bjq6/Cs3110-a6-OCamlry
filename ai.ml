@@ -151,6 +151,7 @@ let caml_turn (this_caml:unit_parameters) enemies g : cmd list =
   (next_close_enemy_unit this_caml enemies g.building_list g.map g.unit_list) in
   *)
 
+  let _ = Printf.printf "Inf = %d; Caml = %d; Tank = %d\n" (List.length enemy_i) (List.length enemy_c) (List.length enemy_t) in
   let top_inf = (top_kill_2 this_caml enemy_i g) in
   let top_caml = (top_kill_2 this_caml enemy_c g) in
   let top_tank = (top_kill_2 this_caml enemy_t g) in

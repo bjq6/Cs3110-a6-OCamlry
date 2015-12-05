@@ -140,29 +140,40 @@ let rec building_check (a : unit_parameters) (lst : building_parameters list)
 let next_to (a : unit_parameters) (enemy : unit_parameters) (g : gamestate) =
     let (x1,y1) = a.position in
     let (x2,y2) = enemy.position in
-    if (((abs x1-x2) + (abs y1-y2)) > a.curr_mvt+1) then None
-    else if ((abs x1-x2) + (abs y1-y2)) = 1 then Some (x1,y1)
+    (*If enemy is too far away*)
+    if (((abs (x1-x2)) + (abs (y1-y2))) > a.curr_mvt+1) then None
+    (*If you are already next to the enemy*)
+    else if ((abs (x1-x2)) + (abs (y1-y2))) = 1 then Some (x1,y1)
+    (*Check 4 spaces around enemy unit
+    - Valid place on map
+    - Not water
+    - Enough curr_mvt to get there
+    - Not unit already there            *)
+    (*Right*)
     else if (map_check (x2+1,y2) g.map) &&
       ((abs (x1-(x2+1))) + (abs (y1-y2)) <= a.curr_mvt) &&
       (g.map.(x2+1).(y2) <> Water) &&
       (unit_at_loc g.unit_list (x2+1,y2) = None)
       then Some (x2+1,y2)
+    (*Left*)
     else if (map_check (x2-1,y2) g.map) &&
       (((abs (x1-(x2-1))) + (abs (y1-y2))) <= a.curr_mvt) &&
       (g.map.(x2-1).(y2) <> Water) &&
       (unit_at_loc g.unit_list (x2-1,y2) = None)
       then Some (x2-1,y2)
+    (*Above*)
     else if (map_check (x2,y2+1) g.map) &&
-      (((abs (x1-x2)) + (abs (y1-(y2+1))) <= a.curr_mvt) &&
+      ((abs (x1-x2)) + (abs (y1-(y2+1))) <= a.curr_mvt) &&
       (g.map.(x2).(y2+1) <> Water) &&
-      (unit_at_loc g.unit_list (x2,y2+1) = None))
+      (unit_at_loc g.unit_list (x2,y2+1) = None)
       then Some (x2,y2+1)
+    (*Below*)
     else if (map_check (x2,y2-1) g.map) &&
-      (((abs (x1-x2)) + (abs (y1-(y2-1))) <= a.curr_mvt) &&
+      ((abs (x1-x2)) + (abs (y1-(y2-1))) <= a.curr_mvt) &&
       (g.map.(x2).(y2-1) <> Water) &&
-      (unit_at_loc g.unit_list (x2,y2-1) = None))
+      (unit_at_loc g.unit_list (x2,y2-1) = None)
       then Some (x2,y2-1)
-    else None
+    else let _ = print_endline("Can't move next_to") in None
 
 (*generates random spot on map to move to bc why not*)
 let rec move_rand (m : terrain array array) (lst : unit_parameters list) =
