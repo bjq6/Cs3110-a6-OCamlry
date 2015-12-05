@@ -166,7 +166,7 @@ let rec move_rand (m : terrain array array) (lst : unit_parameters list) =
   let x = (Array.length (Array.get m 0)) in
   let (x',y') = (Random.int x, Random.int y) in
   match (unit_at_loc lst (x',y'), (m.(x').(y') <> Water)) with
-  | (None, true) -> Printf.printf "Random walking to (%d,%d)" x y; (x',y')
+  | (None, true) -> Printf.printf "Random walking to (%d,%d)\n" x y; (x',y')
   | (_,_) -> move_rand m lst
 
 
