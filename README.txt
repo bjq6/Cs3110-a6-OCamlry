@@ -19,9 +19,15 @@ units and building while defending your own.  For backup, the player is able
 to buy units from buildings that he/she currently owns.
 
 Ocamlry features 3 types of units, they are as follows:
-  Infantry  - represented by a triangle (weakest, able to capture buildings)
+  Infantry  - represented by a triangle.  Infantry units are the only ones 
+              allowed to capture the enemies building.
+              This unit cost 200, has 100hp and a max_movement of 3
   Ocamlry   - represented by a square
-  Tank      - represented by a circle (strongest unit in game)
+              It costs 500 to buy this unit and has 150 hp with a maximum 
+              movemenet of 5 tiles per turn
+  Tank      - represented by a circle.
+              Strongest unit in the game.  This unit costs 1000, has 
+              hp of 250 ,and has max movemement of 4 tiles per turn
 
 
 On the player's turn, he/she will be able to run the following instruction
