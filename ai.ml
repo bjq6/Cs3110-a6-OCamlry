@@ -218,11 +218,13 @@ let start_ai (g:gamestate) : cmd list =
   let my_units = out_of_moves my_guys [] in
   let (my_inf,my_camls,my_tanks) = sort_units my_units ([],[],[]) in
 
+
   let enemy_units = get_units g.unit_list (next_player g).player_name [] in
   (*let (enemy_i,enemy_c,enemy_t) = sort_units enemy_units ([],[],[]) in*)
 
   match my_tanks, my_camls, my_inf with
-  | [], [], [] -> let _ = print_endline("AI is out of units") in [EndTurn]
+  | [], [], [] -> let _ = print_endline("AI is out of units") in
+      (buy_ai g)@[EndTurn]
   | _, _, curr_inf::t -> inf_turn curr_inf enemy_units g
   | [], curr_caml::t, _ -> caml_turn curr_caml enemy_units g
   | curr_tank::t, _, _  -> tank_turn curr_tank enemy_units g
