@@ -74,7 +74,7 @@ let create_map gamestate =
   curr_y := -delta_y;
   draw_map gamestate.map delta_x delta_y;
   draw_grid delta_x delta_y;
-  for i=0 to num_vert_tiles - 1 do 
+  for i=0 to num_vert_tiles - 1 do
     for j=0 to num_hor_tiles - 1 do
       Graphics.moveto (j*delta_x + delta_x*7/10) (i*delta_y);
       Graphics.draw_string ((string_of_int j) ^","^ (string_of_int i)) ;
@@ -178,25 +178,25 @@ let update_status_bar gamestate =
     previous_state := update_state)*)
 let game_over_camel = (Util.read_image 400 "./Graphics/game_over_camel_red.csv"
                                       "./Graphics/game_over_camel_blue.csv"
-                                      "./Graphics/game_over_camel_green.csv") 
+                                      "./Graphics/game_over_camel_green.csv")
 let game_over_text =  (Util.read_image 50  "./Graphics/game_over_text_red.csv"
                                       "./Graphics/game_over_text_blue.csv"
                                       "./Graphics/game_over_text_green.csv")
 
-let display_game_over_screen gameover_state = 
+let display_game_over_screen gameover_state =
   let winner = match gameover_state.curr_player.player_name with
-    |Player1 s -> s |Player2 s-> s in 
-  let score = gameover_state.curr_player.score in 
+    |Player1 s -> s |Player2 s-> s in
+  let score = gameover_state.curr_player.score in
   Graphics.clear_graph ();
   Graphics.draw_image (Graphics.make_image game_over_text) 100 600;
   Graphics.draw_image (Graphics.make_image game_over_camel) 300 100;
   Printf.printf "Thanks for Playing!\n";
-  Printf.printf "Winner is %s with %d points!" winner score
+  Printf.printf "Winner is %s with %d points!\n" winner score
 
 let update_state new_gamestate =
   if new_gamestate.game_over = true then
     display_game_over_screen new_gamestate
-  
+
   else(
     depopulate_map new_gamestate;
     populate_map new_gamestate;
