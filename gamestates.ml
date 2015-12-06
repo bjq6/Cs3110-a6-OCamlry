@@ -167,8 +167,8 @@ let state5 = {
   print_bytes("Loading map ");print_int(i);print_endline("");
   match i with
   | 1 -> state1
-  | 2 -> state2
-  | 3 -> state3
-  | 4 -> state4
-  | 5 -> state5
+  | 2 -> state5
+  | 3 -> state4
+  | 98 -> state2
+  | 99 -> state3
   | _->failwith "Please Enter a number between 1 and 5"
