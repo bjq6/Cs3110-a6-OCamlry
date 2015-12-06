@@ -97,22 +97,29 @@ let state3 = {
   game_over = false;
   turn = 0;
 } in
+let player1_game3_buildings = [create_building p1_name 4 4;create_building p1_name 4 5;create_building p1_name 5 4; create_building p1_name 5 5] in
+let player2_game4_buildings = [create_building p2_name 0 0;create_building p2_name 9 9; create_building p2_name 0 9; create_building p2_name 9 0] in
+let p1_units = [create_unit p1_name 4 4 (Tank);create_unit p1_name 5 5 (Tank); create_unit p1_name 4 5(Ocamlry); create_unit p1_name 5 4(Ocamlry)] in
+let p2_units = [create_unit p2_name 0 0 (Tank);create_unit p2_name 9 9 (Tank);
+                create_unit p2_name 9 0 (Tank);create_unit p2_name 0 9 (Tank);
+                create_unit p2_name 1 1 (Infantry); create_unit p2_name 8 8(Infantry)] in
+
 let state4 = {
-  map = [|[|Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain|];
-          [|Plain; Building (Some p1_name); Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain|];
+  map = [|[|Building (Some p2_name); Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain; Building (Some p2_name)|];
           [|Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain|];
           [|Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain|];
-          [|Plain; Plain; Plain; Plain; Plain; Water; Plain; Plain; Plain; Plain|];
-          [|Plain; Plain; Plain; Plain; Water; Water; Water; Plain; Plain; Plain|];
-          [|Plain; Plain; Plain; Plain; Plain; Water; Water; Plain; Plain; Plain|];
-          [|Plain; Plain; Plain; Plain; Plain; Water; Plain; Plain; Plain; Plain|];
-          [|Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain; Building (Some p2_name); Plain|];
-          [|Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain|]
+          [|Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain|];
+          [|Plain; Plain; Plain; Plain; Building (Some p1_name); Building (Some p1_name); Plain; Plain; Plain; Plain|];
+          [|Plain; Plain; Plain; Plain; Building (Some p1_name); Building (Some p1_name); Plain; Plain; Plain; Plain|];
+          [|Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain|];
+          [|Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain|];
+          [|Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain|];
+          [|Building (Some p2_name); Plain; Plain; Plain; Plain; Plain; Plain; Plain; Plain; Building (Some p2_name)|]
           |];
   curr_player = p1;
   player_state = [p1; p2];
-  unit_list = [p1_inf; p1_tank; p1_caml; p2_inf; p2_tank; p2_caml];
-  building_list = [p1_building; p2_building];
+  unit_list = p1_units@p2_units;
+  building_list = player1_game3_buildings@player2_game4_buildings;
   game_over = false;
   turn = 0;
 } in
