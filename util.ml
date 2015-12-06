@@ -301,7 +301,7 @@ let rec out_of_moves (lst : unit_parameters list) (x : unit_parameters list) =
 (* Game Start : Asks the player what map they want to play - returns int*)
 let rec get_map_num () : int =
   let _ = print_endline("Which map would you like to play?") in
-  let _ = print_endline("1 - Plains\n2 - Pond\n3 - Center Stronghold") in
+  let _ = print_endline("1 - Plains\n2 - Pond\n3 - Rush\n4- Center Stronghold") in
   let str = read_line () in
   let words = String.trim(str) in
   match words with
