@@ -150,10 +150,21 @@ let draw_unit unit_to_draw delta_x delta_y =
   |Tank     -> draw_tank_outline unit_to_draw.position delta_x delta_y );
   draw_unit_status unit_to_draw.position (unit_to_draw.curr_hp) delta_x delta_y
 
+let draw_build building delta_x delta_y = 
+  (match building.owner with
+  | Player1 _ ->  Graphics.set_color player1_color
+  | Player2 _ ->  Graphics.set_color player2_color);
+  let (x,y) = building.position in 
+  Graphics.fill_rect (x*delta_x) (y*delta_y) delta_x delta_y;
+  Graphics.set_color (Graphics.black);
+  Graphics.draw_rect (x*delta_x) (y*delta_y) delta_x delta_y;
+  Graphics.moveto (x*delta_x + delta_x*7/10) (delta_y*y);
+  Graphics.draw_string ((string_of_int x)^ "," ^(string_of_int y)) 
 
 let populate_map gamestate =
   let delta_x = 600/(Array.length gamestate.map) in
   let delta_y = 600/(Array.length gamestate.map.(0)) in
+  List.iter (fun building -> draw_build building delta_x delta_y) gamestate.building_list;
   List.iter (fun elt -> draw_unit elt delta_x delta_y) gamestate.unit_list
 
 let depopulate_map gamestate = create_map gamestate
