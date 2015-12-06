@@ -31,20 +31,22 @@ let attack (attacker:unit_parameters) (defender:unit_parameters)=
   let att_type = attacker.typ in
   let def_type = defender.typ in
   let att_max = (base_access attacker).max_hp in
+  let def_max = (base_access defender).max_hp in
   let def_dmg = (battle_generic att_type def_type) +. rand_percent 5 in
   let att_hlt = float_of_int(attacker.curr_hp)/.float_of_int (att_max) in
-  let hlt_left = 1. -. (att_hlt *. def_dmg) in
-  let new_hlt = float_of_int(defender.curr_hp)*.hlt_left in
+  let change =(float_of_int def_max)*.(att_hlt *. def_dmg)in
+  let new_hlt = float_of_int(defender.curr_hp)-.change in
   defender.curr_hp <- max (int_of_float new_hlt) 0
 
 let attack_sim (attacker:unit_parameters) (defender:unit_parameters)=
   let att_type = attacker.typ in
   let def_type = defender.typ in
   let att_max = (base_access attacker).max_hp in
+  let def_max = (base_access defender).max_hp in
   let def_dmg = (battle_generic att_type def_type) in
   let att_hlt = float_of_int(attacker.curr_hp)/.float_of_int (att_max) in
-  let hlt_left = 1. -. (att_hlt *. def_dmg) in
-  let new_hlt = float_of_int(defender.curr_hp)*.hlt_left in
+  let change =(float_of_int def_max)*.(att_hlt *. def_dmg)in
+  let new_hlt = float_of_int(defender.curr_hp)-.change in
   max (int_of_float new_hlt) 0
 
 let capture (player:player_id)(building:building_parameters)

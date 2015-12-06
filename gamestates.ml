@@ -171,4 +171,4 @@ let state5 = {
   | 3 -> state4
   | 98 -> state2
   | 99 -> state3
-  | _->failwith "Please Enter a number between 1 and 5"
+  | _->failwith "Please Enter a number between 1 and 3"
