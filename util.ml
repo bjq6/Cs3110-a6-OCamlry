@@ -117,7 +117,7 @@ let rec enemy_check (a : unit_parameters) (lst : unit_parameters list)
   | h::t ->
     let (x1,y1) = a.position in
     let (x2,y2) = h.position in
-    if ((abs x1-x2) + (abs y1-y2)) <= a.curr_mvt + 1
+    if ((abs (x1-x2)) + (abs (y1-y2))) <= a.curr_mvt + 1
     then enemy_check a t (h::targets)
     else enemy_check a t targets
 
@@ -152,25 +152,25 @@ let next_to (a : unit_parameters) (enemy : unit_parameters) (g : gamestate) =
     (*Right*)
     else if (map_check (x2+1,y2) g.map) &&
       ((abs (x1-(x2+1))) + (abs (y1-y2)) <= a.curr_mvt) &&
-      (g.map.(x2+1).(y2) <> Water) &&
+      (g.map.(y2).(x2+1) <> Water) &&
       (unit_at_loc g.unit_list (x2+1,y2) = None)
       then Some (x2+1,y2)
     (*Left*)
     else if (map_check (x2-1,y2) g.map) &&
       (((abs (x1-(x2-1))) + (abs (y1-y2))) <= a.curr_mvt) &&
-      (g.map.(x2-1).(y2) <> Water) &&
+      (g.map.(y2).(x2-1) <> Water) &&
       (unit_at_loc g.unit_list (x2-1,y2) = None)
       then Some (x2-1,y2)
     (*Above*)
     else if (map_check (x2,y2+1) g.map) &&
       ((abs (x1-x2)) + (abs (y1-(y2+1))) <= a.curr_mvt) &&
-      (g.map.(x2).(y2+1) <> Water) &&
+      (g.map.(y2+1).(x2) <> Water) &&
       (unit_at_loc g.unit_list (x2,y2+1) = None)
       then Some (x2,y2+1)
     (*Below*)
     else if (map_check (x2,y2-1) g.map) &&
       ((abs (x1-x2)) + (abs (y1-(y2-1))) <= a.curr_mvt) &&
-      (g.map.(x2).(y2-1) <> Water) &&
+      (g.map.(y2-1).(x2) <> Water) &&
       (unit_at_loc g.unit_list (x2,y2-1) = None)
       then Some (x2,y2-1)
     else let _ = print_endline("Can't move next_to") in None
@@ -181,7 +181,7 @@ let rec move_rand (m : terrain array array) (lst : unit_parameters list) =
   let x = (Array.length (Array.get m 0)) in
   let () = Random.self_init () in
   let (x',y') = ((Random.int x), (Random.int y)) in
-  match (unit_at_loc lst (x',y'), (m.(x').(y') <> Water)) with
+  match (unit_at_loc lst (x',y'), (m.(y').(x') <> Water)) with
   | (None, true) -> Printf.printf "Random walking to (%d,%d)\n" x' y'; (x',y')
   | (_,_) -> move_rand m lst
 
@@ -342,8 +342,8 @@ let rec play_ai () =
 (* Given location, map, unit list, returns bool -> loc is available to move to
  * probably should have made this earlier *)
 let go_check (x,y) (m : terrain array array) (lst : unit_parameters list) =
-  (m.(x).(y) <> Water) && (unit_at_loc lst (x,y) = None)
-    && (map_check (x,y) m)
+  (map_check (x,y) m) && (m.(y).(x) <> Water) && (unit_at_loc lst (x,y) = None)
+
 
 
 (*lst is list of potential movement spots; x',y' is target location, lst' = []*)
